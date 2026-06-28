@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MilhaCerta - Dashboard Operacional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 900: '#0b132b', 950: '#020c1b' },
+                        gold: { 400: '#f4d35e', 500: '#ee964b' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-navy-950 text-slate-100 min-h-screen p-6">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-8 border-b border-slate-800 pb-4">
+            <h1 class="text-3xl font-bold text-gold-400">MilhaCerta</h1>
+            <p class="text-slate-400 text-sm">Painel Analítico de Arbitragem de Tarifas — Produção</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <section class="bg-navy-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-xl h-fit">
+                <h2 class="text-lg font-semibold text-slate-200 mb-2">Parâmetros de Busca</h2>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1 font-mono">ORIGEM (IATA)</label>
+                    <input type="text" id="origem" value="GRU" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1 font-mono">DESTINO (IATA)</label>
+                    <input type="text" id="destino" value="IAH" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1 font-mono">CABINE</label>
+                    <div class="flex gap-2" id="toggle-classe">
+                        <button id="btn-eco" data-classe="Econômica" class="flex-1 bg-gold-400 text-navy-950 font-bold py-2 rounded">Econômica</button>
+                        <button id="btn-exec" data-classe="Executiva" class="flex-1 bg-navy-950 border border-slate-700 py-2 rounded text-slate-300">Executiva</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1 font-mono">REFERÊNCIA EM DINHEIRO (R$)</label>
+                    <input type="number" id="preco-manual" placeholder="Buscando..." class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white font-mono">
+                </div>
+                <button id="btn-buscar-api" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 shadow-md cursor-pointer">
+                    <span>🔍</span> Executar Varredura Real
+                </button>
+
+                <div class="border-t border-slate-800 my-4 pt-4">
+                    <h3 class="text-xs font-semibold text-slate-300 font-mono mb-2">VALORAÇÃO DO MILHEIRO (CPP)</h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <label class="text-slate-400 block mb-1">LATAM Pass (R$)</label>
+                            <input type="number" id="cpp-latam" value="25" class="w-full bg-navy-950 border border-slate-700 rounded p-1.5 text-white font-mono">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 block mb-1">Smiles (R$)</label>
+                            <input type="number" id="cpp-smiles" value="17" class="w-full bg-navy-950 border border-slate-700 rounded p-1.5 text-white font-mono">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 block mb-1">Azul (R$)</label>
+                            <input type="number" id="cpp-azul" value="16" class="w-full bg-navy-950 border border-slate-700 rounded p-1.5 text-white font-mono">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 block mb-1">TAP (R$)</label>
+                            <input type="number" id="cpp-tap" value="35" class="w-full bg-navy-950 border border-slate-700 rounded p-1.5 text-white font-mono">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <main class="lg:col-span-2 space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <h2 class="text-2xl font-bold tracking-wide"><span id="txt-origem">GRU</span> → <span id="txt-destino">IAH</span></h2>
+                    <span id="badge-regiao" class="bg-slate-800 text-slate-300 text-xs font-bold px-2.5 py-1 rounded-md font-mono">Análise de Rota</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div id="card-dinheiro" class="bg-navy-900 p-6 rounded-xl border border-slate-800 transition-all duration-300">
+                        <div class="text-amber-400 font-bold text-xs tracking-wider uppercase mb-2">💰 Tarifa Pagante</div>
+                        <p id="res-dinheiro" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
+                        <p id="res-dinheiro-detalhe" class="text-[11px] text-slate-500 mt-2 font-mono">—</p>
+                    </div>
+                    <div id="card-latam" class="bg-navy-900 p-6 rounded-xl border border-slate-800 transition-all duration-300">
+                        <div class="font-bold text-xs tracking-wider uppercase mb-1 flex justify-between items-center">
+                            <span class="text-fuchsia-400">✈️ LATAM Pass</span>
+                            <span id="tag-latam" class="bg-slate-800 text-slate-400 text-[9px] font-mono px-1.5 py-0.5 rounded font-black">—</span>
+                        </div>
+                        <p id="cia-latam" class="text-xs text-slate-400">—</p>
+                        <p id="res-latam-reais" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
+                        <p id="res-latam-milhas" class="text-xs text-slate-400 mt-1 font-mono">0 milhas</p>
+                    </div>
+                    <div id="card-smiles" class="bg-navy-900 p-6 rounded-xl border border-slate-800 transition-all duration-300">
+                        <div class="font-bold text-xs tracking-wider uppercase mb-1 flex justify-between items-center">
+                            <span class="text-orange-400">✈️ Smiles</span>
+                            <span id="tag-smiles" class="bg-slate-800 text-slate-400 text-[9px] font-mono px-1.5 py-0.5 rounded font-black">—</span>
+                        </div>
+                        <p id="cia-smiles" class="text-xs text-slate-400">—</p>
+                        <p id="res-smiles-reais" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
+                        <p id="res-smiles-milhas" class="text-xs text-slate-400 mt-1 font-mono">0 milhas</p>
+                    </div>
+                    <div id="card-tap" class="bg-navy-900 p-6 rounded-xl border border-slate-800 transition-all duration-300">
+                        <div class="font-bold text-xs tracking-wider uppercase mb-1 flex justify-between items-center">
+                            <span class="text-emerald-400">✈️ Alianças / Acordos</span>
+                            <span id="tag-tap" class="bg-slate-800 text-slate-400 text-[9px] font-mono px-1.5 py-0.5 rounded font-black">—</span>
+                        </div>
+                        <p id="cia-tap" class="text-xs text-slate-400">—</p>
+                        <p id="res-tap-reais" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
+                        <p id="res-tap-milhas" class="text-xs text-slate-400 mt-1 font-mono">0 milhas</p>
+                    </div>
+                </div>
+                <div id="box-alerta" class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl text-xs text-slate-300 leading-relaxed"></div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let classeSelecionada = 'Econômica';
+            let precoDinheiroAtual = 0;
+
+            const REGIOES_DATABASE = {
+                DOMESTICO_BR: {
+                    label: "Mercado Doméstico Nacional",
+                    insight: "<strong>⚠️ Diagnóstico Doméstico:</strong> Modelo dinâmico na LATAM/Smiles. A tabela fixa da TAP para voar Azul (30k) exige emissão manual.",
+                    Econômica: {
+                        latam: { milhas: 12000, cia: "LATAM Brasil (Dinâmico)", tag: "MERCADO" },
+                        smiles: { milhas: 15000, cia: "GOL Linhas Aéreas (Dinâmico)", tag: "MERCADO" },
+                        tap: { milhas: 30000, cia: "Azul (via TAP)", tag: "ACORDO FIXO" }
+                    },
+                    Executiva: {
+                        latam: { milhas: 28000, cia: "LATAM Premium Eco", tag: "MERCADO" },
+                        smiles: { milhas: 32000, cia: "GOL Premium Eco", tag: "MERCADO" },
+                        tap: { milhas: 50000, cia: "Azul Business (via TAP)", tag: "ACORDO FIXO" }
+                    }
+                },
+                AMERICA_NORTE: {
+                    label: "Acordos Internacionais: Brasil → EUA",
+                    insight: "<strong>💎 Sweet Spots:</strong> Houston (IAH) é hub da United. Use a TAP (45k) para voar United, ou LATAM Pass (57k) para voar Delta.",
+                    Econômica: {
+                        latam: { milhas: 57000, cia: "Delta Air Lines (via LATAM)", tag: "TABELA FIXA" },
+                        smiles: { milhas: 60000, cia: "American Airlines (Parceira)", tag: "TARIFA FIXA" },
+                        tap: { milhas: 45000, cia: "United / Copa (via TAP)", tag: "TABELA FIXA" }
+                    },
+                    Executiva: {
+                        latam: { milhas: 108000, cia: "Delta One (via LATAM)", tag: "TABELA FIXA" },
+                        smiles: { milhas: 120000, cia: "American Business", tag: "TARIFA FIXA" },
+                        tap: { milhas: 95000, cia: "United Polaris (via TAP)", tag: "TABELA FIXA" }
+                    }
+                }
+            };
+
+            const btnBuscarApi = document.getElementById('btn-buscar-api');
+
+            btnBuscarApi.addEventListener('click', async () => {
+                const orig = document.getElementById('origem').value.toUpperCase();
+                const dest = document.getElementById('destino').value.toUpperCase();
+                
+                document.getElementById('res-dinheiro').innerText = "Buscando...";
+                
+                // Conecta diretamente na API relativa do próprio servidor Vercel!
+                const endpoint = `/api/search?fly_from=${orig}&fly_to=${dest}&date_from=15/10/2026&date_to=15/11/2026`;
+
+                try {
+                    const response = await fetch(endpoint);
+                    const payload = await response.json();
+
+                    if (Array.isArray(payload) && payload.length > 0) {
+                        precoDinheiroAtual = payload[0].preco;
+                        document.getElementById('preco-manual').value = precoDinheiroAtual;
+                        document.getElementById('res-dinheiro-detalhe').innerText = `Tarifa via [${payload[0].cia}] em ${payload[0].data}`;
+                    } else {
+                        precoDinheiroAtual = 0;
+                        document.getElementById('res-dinheiro').innerText = "Esgotado";
+                    }
+                    renderizar();
+                } catch (err) {
+                    document.getElementById('res-dinheiro').innerText = "Falha API";
+                    precoDinheiroAtual = 0;
+                    renderizar();
+                }
+            });
+
+            function renderizar() {
+                const dest = document.getElementById('destino').value.toUpperCase();
+                const regiao = ['IAH', 'JFK', 'MIA', 'MCO'].includes(dest) ? 'AMERICA_NORTE' : 'DOMESTICO_BR';
+                const tabela = REGIOES_DATABASE[regiao][classeSelecionada];
+
+                document.getElementById('badge-regiao').innerText = REGIOES_DATABASE[regiao].label;
+                document.getElementById('box-alerta').innerHTML = REGIOES_DATABASE[regiao].insight;
+
+                const cppLatam = parseFloat(document.getElementById('cpp-latam').value) || 0;
+                const cppSmiles = parseFloat(document.getElementById('cpp-smiles').value) || 0;
+                const cppTap = parseFloat(document.getElementById('cpp-tap').value) || 0;
+
+                const cLatam = (tabela.latam.milhas * cppLatam) / 1000;
+                const cSmiles = (tabela.smiles.milhas * cppSmiles) / 1000;
+                const cTap = (tabela.tap.milhas * cppTap) / 1000;
+
+                document.getElementById('res-latam-milhas').innerText = `${tabela.latam.milhas.toLocaleString()} milhas`;
+                document.getElementById('res-latam-reais').innerText = `R$ ${cLatam.toFixed(2)}`;
+                document.getElementById('tag-latam').innerText = tabela.latam.tag;
+                document.getElementById('cia-latam').innerText = tabela.latam.cia;
+
+                document.getElementById('res-smiles-milhas').innerText = `${tabela.smiles.milhas.toLocaleString()} milhas`;
+                document.getElementById('res-smiles-reais').innerText = `R$ ${cSmiles.toFixed(2)}`;
+                document.getElementById('tag-smiles').innerText = tabela.smiles.tag;
+                document.getElementById('cia-smiles').innerText = tabela.smiles.cia;
+
+                document.getElementById('res-tap-milhas').innerText = `${tabela.tap.milhas.toLocaleString()} milhas`;
+                document.getElementById('res-tap-reais').innerText = `R$ ${cTap.toFixed(2)}`;
+                document.getElementById('tag-tap').innerText = tabela.tap.tag;
+                document.getElementById('cia-tap').innerText = tabela.tap.cia;
+
+                if (precoDinheiroAtual > 0) {
+                    document.getElementById('res-dinheiro').innerText = `R$ ${precoDinheiroAtual.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+                }
+
+                let opcoes = [
+                    { id: 'card-dinheiro', valor: precoDinheiroAtual > 0 ? precoDinheiroAtual : Infinity },
+                    { id: 'card-latam', valor: cLatam },
+                    { id: 'card-smiles', valor: cSmiles },
+                    { id: 'card-tap', valor: cTap }
+                ].sort((a,b) => a.valor - b.valor);
+
+                ['card-dinheiro', 'card-latam', 'card-smiles', 'card-tap'].forEach(id => {
+                    const card = document.getElementById(id);
+                    if (id === opcoes[0].id && opcoes[0].valor !== Infinity) {
+                        card.style.borderColor = '#10b981'; card.style.backgroundColor = '#022c22';
+                    } else {
+                        card.style.borderColor = '#1e293b'; card.style.backgroundColor = '#0f172a';
+                    }
+                });
+            }
+
+            document.getElementById('toggle-classe').addEventListener('click', (e) => {
+                const target = e.target.closest('button');
+                if (!target) return;
+                classeSelecionada = target.getAttribute('data-classe');
+                document.getElementById('btn-eco').className = classeSelecionada === 'Econômica' ? "flex-1 bg-gold-400 text-navy-950 font-bold py-2 rounded" : "flex-1 bg-navy-950 border border-slate-700 py-2 rounded text-slate-300";
+                document.getElementById('btn-exec').className = classeSelecionada === 'Executiva' ? "flex-1 bg-gold-400 text-navy-950 font-bold py-2 rounded" : "flex-1 bg-navy-950 border border-slate-700 py-2 rounded text-slate-300";
+                renderizar();
+            });
+
+            ['origem', 'destino', 'cpp-latam', 'cpp-smiles', 'cpp-azul', 'cpp-tap'].forEach(id => {
+                document.getElementById(id).addEventListener('input', renderizar);
+            });
+
+            renderizar();
+        });
+    </script>
+</body>
+</html>
