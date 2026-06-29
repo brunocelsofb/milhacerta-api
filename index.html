@@ -173,6 +173,10 @@ function linkSmiles(origem, destino){
   const [ano,mes,dia] = d.split('-');
   return `https://www.smiles.com.br/voos/resultado?originAirport=${origem}&destinationAirport=${destino}&dataIda=${dia}%2F${mes}%2F${ano}&adults=1&tripType=1&cabinType=all`;
 }
+function flightsLink(origem, destino){
+  const q = encodeURIComponent(`voos de ${origem} para ${destino}`);
+  return `https://www.google.com/travel/flights?q=${q}`;
+}
 const LINK_TAP_INFO = 'https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas';
 
 const TABELA_POR_REGIAO = {
