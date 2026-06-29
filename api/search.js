@@ -70,11 +70,28 @@ export default async function handler(req, res) {
     const melhor = offers.reduce((min, o) => (Number(o.total_amount) < Number(min.total_amount) ? o : min), offers[0]);
     const cia = melhor.slices?.[0]?.segments?.[0]?.marketing_carrier?.name || melhor.owner?.name || "Companhia não identificada";
 
+    const precoOriginal = Number(melhor.total_amount);
+    const moedaOriginal = melhor.total_currency;
+    let precoBRL = precoOriginal;
+
+    if (moedaOriginal && moedaOriginal !== 'BRL') {
+      try {
+        const cotacaoRes = await fetchComTimeout(`https://open.er-api.com/v6/latest/${moedaOriginal}`, {}, 5000);
+        const cotacaoJson = await cotacaoRes.json();
+        const taxa = cotacaoJson?.rates?.BRL;
+        if (taxa) precoBRL = precoOriginal * taxa;
+      } catch (e) {
+        // Se a cotação falhar, mantém o valor original e avisa na resposta — não inventa número.
+      }
+    }
+
     return res.status(200).json([
       {
         data: dataPartida,
-        preco: Math.round(Number(melhor.total_amount)),
-        moeda: melhor.total_currency, // AVISO: pode não vir em BRL — ver nota abaixo
+        preco: Math.round(precoBRL),
+        preco_original: precoOriginal,
+        moeda_original: moedaOriginal,
+        conversao_aplicada: moedaOriginal !== 'BRL',
         cia,
         link: null // Duffel não usa link externo de checkout — a emissão seria via Order API, dentro do nosso próprio app
       }
