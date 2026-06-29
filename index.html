@@ -33,13 +33,13 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="relative">
                         <label class="text-xs text-slate-400 block mb-1 font-mono">ORIGEM</label>
-                        <input type="text" id="origem" value="GRU" autocomplete="off" placeholder="Cidade ou código IATA" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
+                        <input type="text" id="origem" value="GRU" autocomplete="off" placeholder="Cidade" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
                         <div id="suggestions-origem" class="absolute z-50 left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded shadow-2xl hidden max-h-60 overflow-y-auto text-xs divide-y divide-slate-800"></div>
                     </div>
                     
                     <div class="relative">
                         <label class="text-xs text-slate-400 block mb-1 font-mono">DESTINO</label>
-                        <input type="text" id="destino" value="IAH" autocomplete="off" placeholder="Cidade ou código IATA" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
+                        <input type="text" id="destino" value="IAH" autocomplete="off" placeholder="Cidade" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
                         <div id="suggestions-destino" class="absolute z-50 left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded shadow-2xl hidden max-h-60 overflow-y-auto text-xs divide-y divide-slate-800"></div>
                     </div>
                 </div>
@@ -178,7 +178,6 @@
                 { iata: 'MIA', cidade: 'Miami', nome: 'Miami International (MIA)', keywords: 'MIAMI MIA FLORIDA EUA USA INTERNATIONAL' },
                 { iata: 'MCO', cidade: 'Orlando', nome: 'Orlando International (MCO)', keywords: 'ORLANDO MCO FLORIDA EUA USA DISNEY' },
                 { iata: 'JFK', cidade: 'Nova York', nome: 'Nova York - John F. Kennedy (JFK)', keywords: 'NEW YORK NOVA YORK JFK NY EUA USA KENNEDY NYC' },
-                { iata: 'EWR', cidade: 'Newark', nome: 'Nova York - Newark (EWR)', keywords: 'NEWARK NEW YORK NOVA YORK EWR NJ EUA USA NYC' },
                 { iata: 'LIS', cidade: 'Lisboa', nome: 'Lisboa - Humberto Delgado (LIS)', keywords: 'LISBOA HUMBERTO DELGADO LIS PORTUGAL EUROPA' },
                 { iata: 'EZE', cidade: 'Buenos Aires', nome: 'Buenos Aires - Ezeiza (EZE)', keywords: 'BUENOS AIRES EZEIZA EZE ARGENTINA' }
             ];
@@ -186,7 +185,7 @@
             const REGIOES_DATABASE = {
                 DOMESTICO_BR: {
                     label: "Mercado Doméstico Nacional",
-                    insight: "<strong>⚠️ Diagnóstico Doméstico:</strong> Modelo dinâmico na LATAM/Smiles. A tabela fixa da TAP para voar Azul (30k) exige emissão manual via portal ou central TAP.",
+                    insight: "<strong>⚠️ Diagnóstico Doméstico:</strong> Modelo dinâmico na LATAM/Smiles. A tabela fixa da TAP para voar Azul (30k) exige emissão manual.",
                     Econômica: {
                         latam: { milhas: 12000, cia: "LATAM Brasil (Dinâmico)", tag: "MERCADO" },
                         smiles: { milhas: 15000, cia: "GOL Linhas Aéreas (Dinâmico)", tag: "MERCADO" },
@@ -287,17 +286,18 @@
                 const dataVoltaRaw = document.getElementById('data-volta').value;
 
                 if (!dataIdaRaw || !dataVoltaRaw) {
-                    alert("⚠️ Defina as datas de ida e volta antes de realizar a varredura.");
+                    alert("⚠️ Defina as datas de ida e volta.");
                     return;
                 }
 
                 const dataIda = formatarDataParaBackend(dataIdaRaw);
+                const dataVolta = formatarDataParaBackend(dataVoltaRaw);
                 
                 textoDinheiroExibicao = "Buscando...";
                 document.getElementById('res-dinheiro').innerText = "Buscando...";
                 renderizar();
                 
-                const endpoint = `/api/search?fly_from=${origIata}&fly_to=${destIata}&date_from=${dataIda}`;
+                const endpoint = `/api/search?fly_from=${origIata}&fly_to=${destIata}&date_from=${dataIda}&date_to=${dataVolta}`;
 
                 try {
                     const response = await fetch(endpoint);
@@ -328,6 +328,7 @@
                 const origIata = document.getElementById('origem').value.toUpperCase().trim();
                 const destIata = document.getElementById('destino').value.toUpperCase().trim();
                 const dataIdaRaw = document.getElementById('data-ida').value;
+                const dataVoltaRaw = document.getElementById('data-volta').value;
                 
                 const dadosOrigem = DATABASE_AEROPORTOS.find(item => item.iata === origIata);
                 const dadosDestino = DATABASE_AEROPORTOS.find(item => item.iata === destIata);
@@ -338,17 +339,19 @@
                 document.getElementById('txt-origem').innerText = nomeOrigemVisual;
                 document.getElementById('txt-destino').innerText = nomeDestinoVisual;
 
-                // DEEP LINKS RESOLVIDOS DEFINITIVAMENTE (SMILES, LATAM E GOOGLE)
-                const partes = dataIdaRaw.split("-");
-                const dataSmilesInjetada = partes.length === 3 ? `${partes[2]}%2F${partes[1]}%2F${partes[0]}` : "";
-                
-                document.getElementById('btn-link-smiles').href = `https://www.smiles.com.br/voos/resultado?origem=${origIata}&destino=${destIata}&dataIda=${dataSmilesInjetada}&adultos=1&tipoViagem=1&cabinType=all`;
-                document.getElementById('btn-link-latam').href = `https://www.latamairlines.com/br/pt/flight-search?origin=${origIata}&destination=${destIata}&outbound=${dataIdaRaw}T12%3A00%3A00.000Z&adt=1&chd=0&inf=0&cabin=Economy&trip=OW`;
+                // DEEP LINKS DE IDA E VOLTA (ROUND-TRIP) CORRIGIDOS PARA TODAS AS COMPANHIAS
+                const partesIda = dataIdaRaw.split("-");
+                const partesVolta = dataVoltaRaw.split("-");
+                const dIdaSmiles = partesIda.length === 3 ? `${partesIda[2]}%2F${partesIda[1]}%2F${partesIda[0]}` : "";
+                const dVoltaSmiles = partesVolta.length === 3 ? `${partesVolta[2]}%2F${partesVolta[1]}%2F${partesVolta[0]}` : "";
+
+                document.getElementById('btn-link-smiles').href = `https://www.smiles.com.br/voos/resultado?originAirport=${origIata}&destinationAirport=${destIata}&dataIda=${dIdaSmiles}&dataVolta=${dVoltaSmiles}&adults=1&tripType=2&cabinType=all`;
+                document.getElementById('btn-link-latam').href = `https://www.latamairlines.com/br/pt/flight-search?origin=${origIata}&destination=${destIata}&outbound=${dataIdaRaw}T12%3A00%3A00.000Z&inbound=${dataVoltaRaw}T12%3A00%3A00.000Z&adt=1&chd=0&inf=0&cabin=Economy&trip=RT`;
 
                 if (linkApiDinheiro) {
                     document.getElementById('btn-link-dinheiro').href = linkApiDinheiro;
                 } else {
-                    document.getElementById('btn-link-dinheiro').href = `https://www.google.com/travel/flights?q=Flights%20to%20${destIata}%20from%20${origIata}%20on%20${dataIdaRaw}`;
+                    document.getElementById('btn-link-dinheiro').href = `https://www.google.com/travel/flights?q=Flights%20to%20${destIata}%20from%20${origIata}`;
                 }
 
                 document.getElementById('res-dinheiro').innerText = textoDinheiroExibicao;
@@ -380,7 +383,7 @@
 
                 document.getElementById('res-tap-milhas').innerText = `${tabela.tap.milhas.toLocaleString()} milhas`;
                 document.getElementById('res-tap-reais').innerText = `R$ ${cTap.toFixed(2)}`;
-                document.getElementById('tag-tap').innerText = tabela.tag;
+                document.getElementById('tag-tap').innerText = tabela.tap.tag;
                 document.getElementById('cia-tap').innerText = tabela.tap.cia;
 
                 let opcoes = [
