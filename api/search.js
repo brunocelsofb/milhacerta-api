@@ -24,13 +24,13 @@ export default async function handler(req, res) {
       'x-rapidapi-host': 'sky-scrapper.p.rapidapi.com'
     };
 
-    // 1. Handshake de Origem (Descobre códigos internos do aeroporto)
+    // 1. Handshake de Origem (Busca os códigos internos da entidade)
     const urlOrigem = `https://sky-scrapper.p.rapidapi.com/api/v1/flights/searchAirport?query=${fly_from.toUpperCase()}`;
     const resOrigem = await fetch(urlOrigem, { headers });
     const jsonOrigem = await resOrigem.json();
     const dadosOrigem = jsonOrigem.data?.[0];
 
-    if (!dadosOrigem) return res.status(200).json([]);
+    if (!dadosOrigem) return res.status(200).json({ status: "vazio", motivo: "Origem não localizada" });
     const originSkyId = dadosOrigem.skyId;
     const originEntityId = dadosOrigem.entityId;
 
@@ -40,20 +40,28 @@ export default async function handler(req, res) {
     const jsonDestino = await resDestino.json();
     const dadosDestino = jsonDestino.data?.[0];
 
-    if (!dadosDestino) return res.status(200).json([]);
+    if (!dadosDestino) return res.status(200).json({ status: "vazio", motivo: "Destino não localizado" });
     const destSkyId = dadosDestino.skyId;
     const destEntityId = dadosDestino.entityId;
 
-    // 3. Busca Real na Versão v2 (Corrigido endpoint e acoplamento das chaves)
-    const urlBusca = `https://sky-scrapper.p.rapidapi.com/api/v2/flights/searchFlights?originSkyId=${originSkyId}&destinationSkyId=${destSkyId}&originEntityId=${originEntityId}&destinationEntityId=${destEntityId}&date=${dataIda}&cabinClass=economy&adults=1&currency=BRL`;
+    // 3. Busca de Voos Real (Ajustado parâmetros de entidade)
+    const urlBusca = `https://sky-scrapper.p.rapidapi.com/api/v2/flights/searchFlights?originSkyId=${originSkyId}&destinationSkyId=${destSkyId}&originEntityId=${originEntityId}&destinationEntityId=${destEntityId}&date=${dataIda}&cabinClass=economy&adults=1&currency=BRL&market=BR&locale=pt-BR`;
     
     const response = await fetch(urlBusca, { headers });
-    if (!response.ok) throw new Error("A RapidAPI recusou o processamento do lote.");
+    
+    if (!response.ok) {
+      if (response.status === 429) {
+        return res.status(200).json({ status: "vazio", motivo: "Limite de buscas RapidAPI esgotado" });
+      }
+      throw new Error("A RapidAPI recusou o processamento do lote.");
+    }
     
     const result = await response.json();
     const itineraries = result.data?.itineraries || [];
 
-    if (itineraries.length === 0) return res.status(200).json([]);
+    if (itineraries.length === 0) {
+      return res.status(200).json({ status: "vazio", motivo: "Nenhum voo direto ou com 1 escala encontrado" });
+    }
 
     const melhorVoo = itineraries[0];
     const precoReal = Math.round(melhorVoo.price?.raw || 1200);
@@ -69,6 +77,6 @@ export default async function handler(req, res) {
     ]);
 
   } catch (error) {
-    return res.status(500).json({ error: "Erro interno de comunicação.", detalhe: error.message });
+    return res.status(500).json({ error: "Erro de comunicação.", detalhe: error.message });
   }
 }
