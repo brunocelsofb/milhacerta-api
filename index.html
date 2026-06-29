@@ -29,14 +29,29 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <section class="bg-navy-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-xl h-fit">
                 <h2 class="text-lg font-semibold text-slate-200 mb-2">Parâmetros de Busca</h2>
-                <div>
-                    <label class="text-xs text-slate-400 block mb-1 font-mono">ORIGEM (IATA)</label>
-                    <input type="text" id="origem" value="GRU" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono">
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1 font-mono">ORIGEM (IATA)</label>
+                        <input type="text" id="origem" value="GRU" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1 font-mono">DESTINO (IATA)</label>
+                        <input type="text" id="destino" value="IAH" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono">
+                    </div>
                 </div>
-                <div>
-                    <label class="text-xs text-slate-400 block mb-1 font-mono">DESTINO (IATA)</label>
-                    <input type="text" id="destino" value="IAH" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono">
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1 font-mono">DATA DE IDA</label>
+                        <input type="date" id="data-ida" value="2026-10-15" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white text-xs font-mono">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1 font-mono">DATA DE VOLTA</label>
+                        <input type="date" id="data-volta" value="2026-11-15" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white text-xs font-mono">
+                    </div>
                 </div>
+
                 <div>
                     <label class="text-xs text-slate-400 block mb-1 font-mono">CABINE</label>
                     <div class="flex gap-2" id="toggle-classe">
@@ -44,10 +59,12 @@
                         <button id="btn-exec" data-classe="Executiva" class="flex-1 bg-navy-950 border border-slate-700 py-2 rounded text-slate-300">Executiva</button>
                     </div>
                 </div>
+
                 <div>
                     <label class="text-xs text-slate-400 block mb-1 font-mono">REFERÊNCIA EM DINHEIRO (R$)</label>
                     <input type="number" id="preco-manual" placeholder="Buscando..." class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white font-mono">
                 </div>
+                
                 <button id="btn-buscar-api" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 shadow-md cursor-pointer">
                     <span>🔍</span> Executar Varredura Real
                 </button>
@@ -77,17 +94,21 @@
 
             <main class="lg:col-span-2 space-y-6">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                    <h2 class="text-2xl font-bold tracking-wide"><span id="txt-origem">GRU</span> → <span id="txt-destino">IAH</span></h2>
+                    <h2 class="text-2xl font-bold tracking-wide">
+                        <span id="txt-origem" class="font-mono">GRU</span> → <span id="txt-destino" class="font-mono">IAH</span>
+                    </h2>
                     <span id="badge-regiao" class="bg-slate-800 text-slate-300 text-xs font-bold px-2.5 py-1 rounded-md font-mono">Análise de Rota</span>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div id="card-dinheiro" class="bg-navy-900 p-6 rounded-xl border border-slate-800 transition-all duration-300">
+                    <div id="card-dinheiro" class="bg-navy-900 p-5 rounded-xl border border-slate-800 transition-all duration-300">
                         <div class="text-amber-400 font-bold text-xs tracking-wider uppercase mb-2">💰 Tarifa Pagante</div>
                         <p id="res-dinheiro" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
                         <p id="res-dinheiro-detalhe" class="text-[11px] text-slate-500 mt-2 font-mono">—</p>
+                        <a id="btn-link-dinheiro" href="https://www.kiwi.com" target="_blank" class="mt-4 block text-center bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded text-xs transition-colors">Comprar Passagem (Kiwi)</a>
                     </div>
-                    <div id="card-latam" class="bg-navy-900 p-6 rounded-xl border border-slate-800 transition-all duration-300">
+
+                    <div id="card-latam" class="bg-navy-900 p-5 rounded-xl border border-slate-800 transition-all duration-300">
                         <div class="font-bold text-xs tracking-wider uppercase mb-1 flex justify-between items-center">
                             <span class="text-fuchsia-400">✈️ LATAM Pass</span>
                             <span id="tag-latam" class="bg-slate-800 text-slate-400 text-[9px] font-mono px-1.5 py-0.5 rounded font-black">—</span>
@@ -95,8 +116,10 @@
                         <p id="cia-latam" class="text-xs text-slate-400">—</p>
                         <p id="res-latam-reais" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
                         <p id="res-latam-milhas" class="text-xs text-slate-400 mt-1 font-mono">0 milhas</p>
+                        <a id="btn-link-latam" href="https://www.latampass.com" target="_blank" class="mt-4 block text-center bg-slate-800 hover:bg-slate-700 text-fuchsia-400 border border-fuchsia-900/40 font-semibold py-2 rounded text-xs transition-colors">Emitir no LATAM Pass</a>
                     </div>
-                    <div id="card-smiles" class="bg-navy-900 p-6 rounded-xl border border-slate-800 transition-all duration-300">
+
+                    <div id="card-smiles" class="bg-navy-900 p-5 rounded-xl border border-slate-800 transition-all duration-300">
                         <div class="font-bold text-xs tracking-wider uppercase mb-1 flex justify-between items-center">
                             <span class="text-orange-400">✈️ Smiles</span>
                             <span id="tag-smiles" class="bg-slate-800 text-slate-400 text-[9px] font-mono px-1.5 py-0.5 rounded font-black">—</span>
@@ -104,8 +127,10 @@
                         <p id="cia-smiles" class="text-xs text-slate-400">—</p>
                         <p id="res-smiles-reais" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
                         <p id="res-smiles-milhas" class="text-xs text-slate-400 mt-1 font-mono">0 milhas</p>
+                        <a id="btn-link-smiles" href="https://www.smiles.com.br" target="_blank" class="mt-4 block text-center bg-slate-800 hover:bg-slate-700 text-orange-400 border border-orange-900/40 font-semibold py-2 rounded text-xs transition-colors">Emitir na Smiles</a>
                     </div>
-                    <div id="card-tap" class="bg-navy-900 p-6 rounded-xl border border-slate-800 transition-all duration-300">
+
+                    <div id="card-tap" class="bg-navy-900 p-5 rounded-xl border border-slate-800 transition-all duration-300">
                         <div class="font-bold text-xs tracking-wider uppercase mb-1 flex justify-between items-center">
                             <span class="text-emerald-400">✈️ Alianças / Acordos</span>
                             <span id="tag-tap" class="bg-slate-800 text-slate-400 text-[9px] font-mono px-1.5 py-0.5 rounded font-black">—</span>
@@ -113,9 +138,12 @@
                         <p id="cia-tap" class="text-xs text-slate-400">—</p>
                         <p id="res-tap-reais" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
                         <p id="res-tap-milhas" class="text-xs text-slate-400 mt-1 font-mono">0 milhas</p>
+                        <a id="btn-link-tap" href="https://www.flytap.com" target="_blank" class="mt-4 block text-center bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-900/40 font-semibold py-2 rounded text-xs transition-colors">Emitir via TAP Miles&Go</a>
                     </div>
                 </div>
-                <div id="box-alerta" class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl text-xs text-slate-300 leading-relaxed"></div>
+                <div id="box-alerta" class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl text-xs text-slate-300 leading-relaxed">
+                    Insira os dados e execute a varredura para cruzar com a tabela de milhas.
+                </div>
             </main>
         </div>
     </div>
@@ -128,7 +156,7 @@
             const REGIOES_DATABASE = {
                 DOMESTICO_BR: {
                     label: "Mercado Doméstico Nacional",
-                    insight: "<strong>⚠️ Diagnóstico Doméstico:</strong> Modelo dinâmico na LATAM/Smiles. A tabela fixa da TAP para voar Azul (30k) exige emissão manual.",
+                    insight: "<strong>⚠️ Diagnóstico Doméstico:</strong> Modelo dinâmico na LATAM/Smiles. A tabela fixa da TAP para voar Azul (30k) exige emissão manual via portal ou central TAP.",
                     Econômica: {
                         latam: { milhas: 12000, cia: "LATAM Brasil (Dinâmico)", tag: "MERCADO" },
                         smiles: { milhas: 15000, cia: "GOL Linhas Aéreas (Dinâmico)", tag: "MERCADO" },
@@ -158,23 +186,40 @@
 
             const btnBuscarApi = document.getElementById('btn-buscar-api');
 
+            function formatarDataParaBackend(dataString) {
+                if (!dataString) return "";
+                const [ano, mes, dia] = dataString.split("-");
+                return `${dia}/${mes}/${ano}`;
+            }
+
             btnBuscarApi.addEventListener('click', async () => {
                 const orig = document.getElementById('origem').value.toUpperCase();
                 const dest = document.getElementById('destino').value.toUpperCase();
+                const dataIdaRaw = document.getElementById('data-ida').value;
+                const dataVoltaRaw = document.getElementById('data-volta').value;
+
+                if (!dataIdaRaw || !dataVoltaRaw) {
+                    alert("⚠️ Defina as datas de ida e volta antes de realizar a varredura.");
+                    return;
+                }
+
+                const dataIda = formatarDataParaBackend(dataIdaRaw);
+                const dataVolta = formatarDataParaBackend(dataVoltaRaw);
                 
                 document.getElementById('res-dinheiro').innerText = "Buscando...";
                 
-                // Conecta diretamente na API relativa do próprio servidor Vercel!
-                const endpoint = `/api/search?fly_from=${orig}&fly_to=${dest}&date_from=15/10/2026&date_to=15/11/2026`;
+                const endpoint = `/api/search?fly_from=${orig}&fly_to=${dest}&date_from=${dataIda}&date_to=${dataVolta}`;
 
                 try {
                     const response = await fetch(endpoint);
                     const payload = await response.json();
 
                     if (Array.isArray(payload) && payload.length > 0) {
-                        precoDinheiroAtual = payload[0].preco;
+                        const vooResult = payload[0];
+                        precoDinheiroAtual = vooResult.preco;
                         document.getElementById('preco-manual').value = precoDinheiroAtual;
-                        document.getElementById('res-dinheiro-detalhe').innerText = `Tarifa via [${payload[0].cia}] em ${payload[0].data}`;
+                        document.getElementById('res-dinheiro-detalhe').innerText = `Tarifa via [${vooResult.cia}] em ${vooResult.data}`;
+                        document.getElementById('btn-link-dinheiro').href = vooResult.link || "https://www.kiwi.com";
                     } else {
                         precoDinheiroAtual = 0;
                         document.getElementById('res-dinheiro').innerText = "Esgotado";
@@ -188,8 +233,15 @@
             });
 
             function renderizar() {
+                const orig = document.getElementById('origem').value.toUpperCase();
                 const dest = document.getElementById('destino').value.toUpperCase();
-                const regiao = ['IAH', 'JFK', 'MIA', 'MCO'].includes(dest) ? 'AMERICA_NORTE' : 'DOMESTICO_BR';
+                
+                // BUGFIX: IDs limpos sem as classes CSS grudadas
+                document.getElementById('txt-origem').innerText = orig;
+                document.getElementById('txt-destino').innerText = dest;
+
+                const rotasInternacionais = ['IAH', 'JFK', 'MIA', 'MCO', 'HOUSTON', 'NEW YORK', 'MIAMI', 'ORLANDO'];
+                const regiao = rotasInternacionais.includes(dest) ? 'AMERICA_NORTE' : 'DOMESTICO_BR';
                 const tabela = REGIOES_DATABASE[regiao][classeSelecionada];
 
                 document.getElementById('badge-regiao').innerText = REGIOES_DATABASE[regiao].label;
