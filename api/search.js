@@ -5,10 +5,10 @@ export default async function handler(req, res) {
   
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { fly_from, fly_to, date_from, date_to } = req.query;
+  const { fly_from, fly_to, date_from } = req.query;
 
   if (!fly_from || !fly_to || !date_from) {
-    return res.status(400).json({ error: "Parâmetros de busca incompletos." });
+    return res.status(400).json({ error: "Parâmetros incompletos." });
   }
 
   const RAPID_KEY = process.env.RAPIDAPI_KEY;
@@ -16,9 +16,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Configure a variável RAPIDAPI_KEY na Vercel." });
   }
 
-  // Converte as datas para o formato ISO (YYYY-MM-DD)
   const dataIda = date_from.includes('/') ? date_from.split('/').reverse().join('-') : date_from;
-  const dataVolta = date_to && date_to.includes('/') ? date_to.split('/').reverse().join('-') : date_to;
 
   try {
     const headers = {
@@ -46,13 +44,9 @@ export default async function handler(req, res) {
     const destSkyId = dadosDestino.skyId;
     const destEntityId = dadosDestino.entityId;
 
-    // 3. Montagem da URL de Busca Real (Suporta Ida ou Ida e Volta dinamicamente)
-    let urlBusca = `https://sky-scrapper.p.rapidapi.com/api/v2/flights/searchFlights?originSkyId=${originSkyId}&destinationSkyId=${destSkyId}&originEntityId=${originEntityId}&destinationEntityId=${destEntityId}&date=${dataIda}&cabinClass=economy&adults=1&currency=BRL`;
+    // 3. Busca Limpa de Ida (Foco na rota estável v2)
+    const urlBusca = `https://sky-scrapper.p.rapidapi.com/api/v2/flights/searchFlights?originSkyId=${originSkyId}&destinationSkyId=${destSkyId}&originEntityId=${originEntityId}&destinationEntityId=${destEntityId}&date=${dataIda}&cabinClass=economy&adults=1&currency=BRL`;
     
-    if (dataVolta) {
-      urlBusca += `&returnDate=${dataVolta}`;
-    }
-
     const response = await fetch(urlBusca, { headers });
     if (!response.ok) throw new Error("A RapidAPI recusou o processamento.");
     
@@ -60,7 +54,7 @@ export default async function handler(req, res) {
     const itineraries = result.data?.itineraries || [];
 
     if (itineraries.length === 0) {
-      return res.status(200).json({ status: "vazio", motivo: "Nenhum voo direto ou com 1 escala encontrado" });
+      return res.status(200).json({ status: "vazio", motivo: "Voo indisponível nesta data" });
     }
 
     const melhorVoo = itineraries[0];
@@ -72,7 +66,7 @@ export default async function handler(req, res) {
         data: dataIda,
         preco: precoReal,
         cia: nomeCia,
-        link: `https://www.google.com/travel/flights?q=Flights%20to%20${destSkyId}%20from%20${originSkyId}`
+        link: `https://www.google.com/travel/flights?q=Flights%20to%20${destSkyId}%20from%20${originSkyId}%20on%20${dataIda}%20one%20way`
       }
     ]);
 
