@@ -24,7 +24,7 @@ export default async function handler(req, res) {
       'x-rapidapi-host': 'sky-scrapper.p.rapidapi.com'
     };
 
-    // 1. Handshake Automático: Descobre o EntityID de Origem
+    // 1. Handshake de Origem (Descobre códigos internos do aeroporto)
     const urlOrigem = `https://sky-scrapper.p.rapidapi.com/api/v1/flights/searchAirport?query=${fly_from.toUpperCase()}`;
     const resOrigem = await fetch(urlOrigem, { headers });
     const jsonOrigem = await resOrigem.json();
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     const originSkyId = dadosOrigem.skyId;
     const originEntityId = dadosOrigem.entityId;
 
-    // 2. Handshake Automático: Descobre o EntityID de Destino
+    // 2. Handshake de Destino
     const urlDestino = `https://sky-scrapper.p.rapidapi.com/api/v1/flights/searchAirport?query=${fly_to.toUpperCase()}`;
     const resDestino = await fetch(urlDestino, { headers });
     const jsonDestino = await resDestino.json();
@@ -44,11 +44,11 @@ export default async function handler(req, res) {
     const destSkyId = dadosDestino.skyId;
     const destEntityId = dadosDestino.entityId;
 
-    // 3. Executa a Varredura Real usando as credenciais completas descobertas
-    const urlBusca = `https://sky-scrapper.p.rapidapi.com/api/v1/flights/searchFlights?originSkyId=${originSkyId}&destinationSkyId=${destSkyId}&originEntityId=${originEntityId}&destinationEntityId=${destEntityId}&date=${dataIda}&cabinClass=economy&adults=1&currency=BRL`;
+    // 3. Busca Real na Versão v2 (Corrigido endpoint e acoplamento das chaves)
+    const urlBusca = `https://sky-scrapper.p.rapidapi.com/api/v2/flights/searchFlights?originSkyId=${originSkyId}&destinationSkyId=${destSkyId}&originEntityId=${originEntityId}&destinationEntityId=${destEntityId}&date=${dataIda}&cabinClass=economy&adults=1&currency=BRL`;
     
     const response = await fetch(urlBusca, { headers });
-    if (!response.ok) throw new Error("A RapidAPI recusou o processamento da busca.");
+    if (!response.ok) throw new Error("A RapidAPI recusou o processamento do lote.");
     
     const result = await response.json();
     const itineraries = result.data?.itineraries || [];
@@ -56,22 +56,19 @@ export default async function handler(req, res) {
     if (itineraries.length === 0) return res.status(200).json([]);
 
     const melhorVoo = itineraries[0];
-    const precoReal = Math.round(melhorVoo.price?.raw || 1250);
+    const precoReal = Math.round(melhorVoo.price?.raw || 1200);
     const nomeCia = melhorVoo.legs?.[0]?.carriers?.marketing?.[0]?.name || "Múltiplas Cias";
-
-    // Gera o link de redirecionamento dinâmico do Google Flights
-    const linkCheckout = `https://www.google.com/travel/flights?q=Flights%20to%20${destSkyId}%20from%20${originSkyId}%20on%20${dataIda}`;
 
     return res.status(200).json([
       {
         data: dataIda,
         preco: precoReal,
         cia: nomeCia,
-        link: linkCheckout
+        link: `https://www.google.com/travel/flights?q=Flights%20to%20${destSkyId}%20from%20${originSkyId}%20on%20${dataIda}`
       }
     ]);
 
   } catch (error) {
-    return res.status(500).json({ error: "Erro de conexão com o servidor da RapidAPI.", detalhe: error.message });
+    return res.status(500).json({ error: "Erro interno de comunicação.", detalhe: error.message });
   }
 }
