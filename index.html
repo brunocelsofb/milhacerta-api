@@ -33,13 +33,13 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="relative">
                         <label class="text-xs text-slate-400 block mb-1 font-mono">ORIGEM</label>
-                        <input type="text" id="origem" value="GRU" autocomplete="off" placeholder="Cidade" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
+                        <input type="text" id="origem" value="GRU" autocomplete="off" placeholder="Cidade ou código IATA" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
                         <div id="suggestions-origem" class="absolute z-50 left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded shadow-2xl hidden max-h-60 overflow-y-auto text-xs divide-y divide-slate-800"></div>
                     </div>
                     
                     <div class="relative">
                         <label class="text-xs text-slate-400 block mb-1 font-mono">DESTINO</label>
-                        <input type="text" id="destino" value="IAH" autocomplete="off" placeholder="Cidade" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
+                        <input type="text" id="destino" value="MCO" autocomplete="off" placeholder="Cidade ou código IATA" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
                         <div id="suggestions-destino" class="absolute z-50 left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded shadow-2xl hidden max-h-60 overflow-y-auto text-xs divide-y divide-slate-800"></div>
                     </div>
                 </div>
@@ -100,14 +100,14 @@
                     <h2 class="text-xl font-bold tracking-wide flex items-center gap-2">
                         <span id="txt-origem" class="font-sans">São Paulo (GRU)</span> 
                         <span class="text-slate-600">→</span> 
-                        <span id="txt-destino" class="font-sans">Houston (IAH)</span>
+                        <span id="txt-destino" class="font-sans">Orlando (MCO)</span>
                     </h2>
                     <span id="badge-regiao" class="bg-slate-800 text-slate-300 text-xs font-bold px-2.5 py-1 rounded-md font-mono">Análise de Rota</span>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div id="card-dinheiro" class="bg-navy-900 p-5 rounded-xl border border-slate-800 transition-all duration-300">
-                        <div class="text-amber-400 font-bold text-xs tracking-wider uppercase mb-2">💰 Tarifa Pagante</div>
+                        <div class="text-amber-400 font-bold text-xs tracking-wider uppercase mb-2">💰 Tarifa Pagante (Ida)</div>
                         <p id="res-dinheiro" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
                         <p id="res-dinheiro-detalhe" class="text-[11px] text-slate-500 mt-2 font-mono">—</p>
                         <a id="btn-link-dinheiro" href="#" target="_blank" class="mt-4 block text-center bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded text-xs transition-colors">Comprar Passagem Real</a>
@@ -178,6 +178,7 @@
                 { iata: 'MIA', cidade: 'Miami', nome: 'Miami International (MIA)', keywords: 'MIAMI MIA FLORIDA EUA USA INTERNATIONAL' },
                 { iata: 'MCO', cidade: 'Orlando', nome: 'Orlando International (MCO)', keywords: 'ORLANDO MCO FLORIDA EUA USA DISNEY' },
                 { iata: 'JFK', cidade: 'Nova York', nome: 'Nova York - John F. Kennedy (JFK)', keywords: 'NEW YORK NOVA YORK JFK NY EUA USA KENNEDY NYC' },
+                { iata: 'EWR', cidade: 'Newark', nome: 'Nova York - Newark (EWR)', keywords: 'NEWARK NEW YORK NOVA YORK EWR NJ EUA USA NYC' },
                 { iata: 'LIS', cidade: 'Lisboa', nome: 'Lisboa - Humberto Delgado (LIS)', keywords: 'LISBOA HUMBERTO DELGADO LIS PORTUGAL EUROPA' },
                 { iata: 'EZE', cidade: 'Buenos Aires', nome: 'Buenos Aires - Ezeiza (EZE)', keywords: 'BUENOS AIRES EZEIZA EZE ARGENTINA' }
             ];
@@ -185,7 +186,7 @@
             const REGIOES_DATABASE = {
                 DOMESTICO_BR: {
                     label: "Mercado Doméstico Nacional",
-                    insight: "<strong>⚠️ Diagnóstico Doméstico:</strong> Modelo dinâmico na LATAM/Smiles. A tabela fixa da TAP para voar Azul (30k) exige emissão manual.",
+                    insight: "<strong>⚠️ Diagnóstico Doméstico:</strong> Modelo dinâmico na LATAM/Smiles. A tabela fixa da TAP para voar Azul (30k) exige emissão manual via portal ou central TAP.",
                     Econômica: {
                         latam: { milhas: 12000, cia: "LATAM Brasil (Dinâmico)", tag: "MERCADO" },
                         smiles: { milhas: 15000, cia: "GOL Linhas Aéreas (Dinâmico)", tag: "MERCADO" },
@@ -283,21 +284,19 @@
                 const origIata = document.getElementById('origem').value.toUpperCase().trim();
                 const destIata = document.getElementById('destino').value.toUpperCase().trim();
                 const dataIdaRaw = document.getElementById('data-ida').value;
-                const dataVoltaRaw = document.getElementById('data-volta').value;
 
-                if (!dataIdaRaw || !dataVoltaRaw) {
-                    alert("⚠️ Defina as datas de ida e volta.");
+                if (!dataIdaRaw) {
+                    alert("⚠️ Defina a data de ida antes de realizar a varredura.");
                     return;
                 }
 
                 const dataIda = formatarDataParaBackend(dataIdaRaw);
-                const dataVolta = formatarDataParaBackend(dataVoltaRaw);
                 
                 textoDinheiroExibicao = "Buscando...";
                 document.getElementById('res-dinheiro').innerText = "Buscando...";
                 renderizar();
                 
-                const endpoint = `/api/search?fly_from=${origIata}&fly_to=${destIata}&date_from=${dataIda}&date_to=${dataVolta}`;
+                const endpoint = `/api/search?fly_from=${origIata}&fly_to=${destIata}&date_from=${dataIda}`;
 
                 try {
                     const response = await fetch(endpoint);
@@ -339,7 +338,7 @@
                 document.getElementById('txt-origem').innerText = nomeOrigemVisual;
                 document.getElementById('txt-destino').innerText = nomeDestinoVisual;
 
-                // DEEP LINKS DE IDA E VOLTA (ROUND-TRIP) CORRIGIDOS PARA TODAS AS COMPANHIAS
+                // DEEP LINKS ESTRUTURADOS COM IDA E VOLTA REAIS DO MERCADO
                 const partesIda = dataIdaRaw.split("-");
                 const partesVolta = dataVoltaRaw.split("-");
                 const dIdaSmiles = partesIda.length === 3 ? `${partesIda[2]}%2F${partesIda[1]}%2F${partesIda[0]}` : "";
@@ -351,7 +350,7 @@
                 if (linkApiDinheiro) {
                     document.getElementById('btn-link-dinheiro').href = linkApiDinheiro;
                 } else {
-                    document.getElementById('btn-link-dinheiro').href = `https://www.google.com/travel/flights?q=Flights%20to%20${destIata}%20from%20${origIata}`;
+                    document.getElementById('btn-link-dinheiro').href = `https://www.google.com/travel/flights?q=Flights%20to%20${destIata}%20from%20${origIata}%20on%20${dataIdaRaw}%20through%20${dataVoltaRaw}`;
                 }
 
                 document.getElementById('res-dinheiro').innerText = textoDinheiroExibicao;
