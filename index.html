@@ -158,7 +158,7 @@
             let classeSelecionada = 'Econômica';
             let precoDinheiroAtual = 0;
             let linkApiDinheiro = '';
-            let textoDinheiroExibicao = 'R$ 0,00'; // Var de estado protetora contra o bug do R$ 0,00 fixo
+            let textoDinheiroExibicao = 'R$ 0,00';
 
             const DATABASE_AEROPORTOS = [
                 { iata: 'GRU', cidade: 'São Paulo', nome: 'São Paulo - Guarulhos Intl (GRU)', keywords: 'SAO PAULO SÃO PAULO GUARULHOS GRU SP GUARULHOS INTL' },
@@ -167,26 +167,13 @@
                 { iata: 'SDU', cidade: 'Rio de Janeiro', nome: 'Rio de Janeiro - Santos Dumont (SDU)', keywords: 'RIO DE JANEIRO SANTOS DUMONT SDU RJ RIO' },
                 { iata: 'GIG', cidade: 'Rio de Janeiro', nome: 'Rio de Janeiro - Galeão Intl (GIG)', keywords: 'RIO DE JANEIRO GALEAO GALEÃO GIG RJ RIO INTERNATIONAL' },
                 { iata: 'CNF', cidade: 'Belo Horizonte', nome: 'Belo Horizonte - Confins (CNF)', keywords: 'BELO HORIZONTE CONFINS CNF MG BH MINAS' },
-                { iata: 'VIX', cidade: 'Vitória', nome: 'Vitória - Eurico de Aguiar (VIX)', keywords: 'VITORIA VITÓRIA EURICO AGUIAR VIX ES ESPIRITO SANTO' },
-                { iata: 'RAO', cidade: 'Ribeirão Preto', nome: 'Ribeirão Preto (RAO)', keywords: 'RIBEIRAO PRETO RIBEIRÃO PRETO RAO SP' },
-                { iata: 'SJP', cidade: 'São José do Rio Preto', nome: 'São José do Rio Preto (SJP)', keywords: 'SAO JOSE DO RIO PRETO SÃO JOSÉ DO RIO PRETO SJP SP' },
-                { iata: 'UDI', cidade: 'Uberlândia', nome: 'Uberlândia (UDI)', keywords: 'UBERLANDIA UBERLÂNDIA UDI MG' },
                 { iata: 'GYN', cidade: 'Goiânia', nome: 'Goiânia - Santa Genoveva (GYN)', keywords: 'GOIANIA GOIÂNIA SANTA GENOVEVA GYN GO GOIAS GOIÁS' },
                 { iata: 'BSB', cidade: 'Brasília', nome: 'Brasília - Juscelino Kubitschek (BSB)', keywords: 'BRASILIA BRASÍLIA JUSCELINO KUBITSCHEK BSB DF DISTRITO FEDERAL' },
-                { iata: 'CGB', cidade: 'Cuiabá', nome: 'Cuiabá - Marechal Rondon (CGB)', keywords: 'CUIABA CUIABÁ MARECHAL RONDON CGB MT MATO GROSSO' },
-                { iata: 'CGR', cidade: 'Campo Grande', nome: 'Campo Grande (CGR)', keywords: 'CAMPO GRANDE CGR MS MATO GROSSO DO SUL' },
-                { iata: 'SSA', cidade: 'Salvador', nome: 'Salvador - Dep. Luís Eduardo (SSA)', keywords: 'SALVADOR LUIS EDUARDO SSA BA BAHIA' },
                 { iata: 'REC', cidade: 'Recife', nome: 'Recife - Guararapes (REC)', keywords: 'RECIFE GUARARAPES REC PE PERNAMBUCO' },
                 { iata: 'FOR', cidade: 'Fortaleza', nome: 'Fortaleza - Pinto Martins (FOR)', keywords: 'FORTALEZA PINTO MARTINS FOR CE CEARA CEARÁ' },
-                { iata: 'NAT', cidade: 'Natal', nome: 'Natal - São Gonçalo do Amarante (NAT)', keywords: 'NATAL SAO GONCALO DO AMARANTE SÃO GONÇALO NAT RN RIO GRANDE DO NORTE' },
-                { iata: 'MCZ', cidade: 'Maceió', nome: 'Maceió - Zumbi dos Palmares (MCZ)', keywords: 'MACEIO MACEIÓ ZUMBI DOS PALMARES MCZ AL ALAGOAS' },
-                { iata: 'JPA', cidade: 'João Pessoa', nome: 'João Pessoa - Castro Pinto (JPA)', keywords: 'JOAO PESSOA JOÃO PESSOA CASTRO PINTO JPA PB PARAIBA PARAÍBA' },
-                { iata: 'AJU', cidade: 'Aracaju', nome: 'Aracaju - Santa Maria (AJU)', keywords: 'ARACAJU SANTA MARIA AJU SE SERGIPE' },
-                { iata: 'SLZ', cidade: 'São Luís', nome: 'São Luís - Cunha Machado (SLZ)', keywords: 'SAO LUIS SÃO LUÍS CUNHA MACHADO SLZ MA MARANHAO MARANHÃO' },
-                { iata: 'THE', cidade: 'Teresina', nome: 'Teresina (THE)', keywords: 'TERESINA THE PI PIAUI PIAUÍ' },
+                { iata: 'NAT', cidade: 'Natal', nome: 'Natal - São Gonçalo (NAT)', keywords: 'NATAL SAO GONCALO DO AMARANTE SÃO GONÇALO NAT RN RIO GRANDE DO NORTE' },
                 { iata: 'MAO', cidade: 'Manaus', nome: 'Manaus - Eduardo Gomes (MAO)', keywords: 'MANAUS EDUARDO GOMES MAO AM AMAZONAS' },
                 { iata: 'BEL', cidade: 'Belém', nome: 'Belém - Val-de-Cans (BEL)', keywords: 'BELEM BELÉM VAL DE CANS BEL PA PARA PARÁ' },
-                { iata: 'PMW', cidade: 'Palmas', nome: 'Palmas (PMW)', keywords: 'PALMAS PMW TO TOCANTINS' },
                 { iata: 'IAH', cidade: 'Houston', nome: 'Houston - George Bush Intl (IAH)', keywords: 'HOUSTON GEORGE BUSH IAH TEXAS EUA USA INTERCONTINENTAL' },
                 { iata: 'MIA', cidade: 'Miami', nome: 'Miami International (MIA)', keywords: 'MIAMI MIA FLORIDA EUA USA INTERNATIONAL' },
                 { iata: 'MCO', cidade: 'Orlando', nome: 'Orlando International (MCO)', keywords: 'ORLANDO MCO FLORIDA EUA USA DISNEY' },
@@ -305,12 +292,12 @@
                 }
 
                 const dataIda = formatarDataParaBackend(dataIdaRaw);
-                const dataVolta = formatarDataParaBackend(dataVoltaRaw);
                 
                 textoDinheiroExibicao = "Buscando...";
                 document.getElementById('res-dinheiro').innerText = "Buscando...";
+                renderizar();
                 
-                const endpoint = `/api/search?fly_from=${origIata}&fly_to=${destIata}&date_from=${dataIda}&date_to=${dataVolta}`;
+                const endpoint = `/api/search?fly_from=${origIata}&fly_to=${destIata}&date_from=${dataIda}`;
 
                 try {
                     const response = await fetch(endpoint);
@@ -326,7 +313,7 @@
                     } else {
                         precoDinheiroAtual = 0;
                         linkApiDinheiro = '';
-                        textoDinheiroExibicao = "Esgotado";
+                        textoDinheiroExibicao = payload.motivo ? payload.motivo : "Esgotado";
                     }
                     renderizar();
                 } catch (err) {
@@ -351,11 +338,12 @@
                 document.getElementById('txt-origem').innerText = nomeOrigemVisual;
                 document.getElementById('txt-destino').innerText = nomeDestinoVisual;
 
-                // CORREÇÃO DOS LINKS DIRETOS DA LATAM E SMILES
-                document.getElementById('btn-link-smiles').href = `https://www.smiles.com.br/voos/passagem-aerea?origem=${origIata}&destino=${destIata}&adultos=1&tipoViagem=somente_ida`;
+                // DEEP LINKS RESOLVIDOS DEFINITIVAMENTE (SMILES, LATAM E GOOGLE)
+                const partes = dataIdaRaw.split("-");
+                const dataSmilesInjetada = partes.length === 3 ? `${partes[2]}%2F${partes[1]}%2F${partes[0]}` : "";
                 
-                // Formato estrito ISO exigido pelo motor da LATAM Airlines para evitar "Não encontrado"
-                document.getElementById('btn-link-latam').href = `https://www.latamairlines.com/br/pt/flight-search?origin=${origIata}&outbound=${dataIdaRaw}T12%3A00%3A00.000Z&destination=${destIata}&adt=1&chd=0&inf=0&cabin=Economy&trip=OW`;
+                document.getElementById('btn-link-smiles').href = `https://www.smiles.com.br/voos/resultado?origem=${origIata}&destino=${destIata}&dataIda=${dataSmilesInjetada}&adultos=1&tipoViagem=1&cabinType=all`;
+                document.getElementById('btn-link-latam').href = `https://www.latamairlines.com/br/pt/flight-search?origin=${origIata}&destination=${destIata}&outbound=${dataIdaRaw}T12%3A00%3A00.000Z&adt=1&chd=0&inf=0&cabin=Economy&trip=OW`;
 
                 if (linkApiDinheiro) {
                     document.getElementById('btn-link-dinheiro').href = linkApiDinheiro;
@@ -363,10 +351,9 @@
                     document.getElementById('btn-link-dinheiro').href = `https://www.google.com/travel/flights?q=Flights%20to%20${destIata}%20from%20${origIata}%20on%20${dataIdaRaw}`;
                 }
 
-                // Protege a exibição contra o overwrite do R$ 0,00
                 document.getElementById('res-dinheiro').innerText = textoDinheiroExibicao;
 
-                const rotasInternacionais = ['IAH', 'JFK', 'MIA', 'MCO'];
+                const rotasInternacionais = ['IAH', 'JFK', 'MIA', 'MCO', 'LIS', 'EZE'];
                 const regiao = rotasInternacionais.includes(destIata) ? 'AMERICA_NORTE' : 'DOMESTICO_BR';
                 const tabela = REGIOES_DATABASE[regiao][classeSelecionada];
 
@@ -393,7 +380,7 @@
 
                 document.getElementById('res-tap-milhas').innerText = `${tabela.tap.milhas.toLocaleString()} milhas`;
                 document.getElementById('res-tap-reais').innerText = `R$ ${cTap.toFixed(2)}`;
-                document.getElementById('tag-tap').innerText = tabela.tap.tag;
+                document.getElementById('tag-tap').innerText = tabela.tag;
                 document.getElementById('cia-tap').innerText = tabela.tap.cia;
 
                 let opcoes = [
