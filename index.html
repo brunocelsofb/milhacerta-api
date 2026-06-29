@@ -33,14 +33,14 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="relative">
                         <label class="text-xs text-slate-400 block mb-1 font-mono">ORIGEM</label>
-                        <input type="text" id="origem" value="GRU" autocomplete="off" placeholder="Ex: GYN ou São Paulo" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
-                        <div id="suggestions-origem" class="absolute z-50 left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded shadow-2xl hidden max-h-52 overflow-y-auto text-xs divide-y divide-slate-800"></div>
+                        <input type="text" id="origem" value="GRU" autocomplete="off" placeholder="Cidade ou código IATA" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
+                        <div id="suggestions-origem" class="absolute z-50 left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded shadow-2xl hidden max-h-60 overflow-y-auto text-xs divide-y divide-slate-800"></div>
                     </div>
                     
                     <div class="relative">
                         <label class="text-xs text-slate-400 block mb-1 font-mono">DESTINO</label>
-                        <input type="text" id="destino" value="IAH" autocomplete="off" placeholder="Ex: IAH ou Houston" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
-                        <div id="suggestions-destino" class="absolute z-50 left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded shadow-2xl hidden max-h-52 overflow-y-auto text-xs divide-y divide-slate-800"></div>
+                        <input type="text" id="destino" value="IAH" autocomplete="off" placeholder="Cidade ou código IATA" class="w-full bg-navy-950 border border-slate-700 rounded p-2 text-white uppercase font-mono text-sm focus:border-gold-400 focus:outline-none">
+                        <div id="suggestions-destino" class="absolute z-50 left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded shadow-2xl hidden max-h-60 overflow-y-auto text-xs divide-y divide-slate-800"></div>
                     </div>
                 </div>
 
@@ -158,20 +158,71 @@
             let classeSelecionada = 'Econômica';
             let precoDinheiroAtual = 0;
 
-            // 1. BANCO DE DADOS DE AEROPORTOS PARA O AUTOCOMPLETE
+            // BANCO DE DADOS COMPLETO DE AEROPORTOS (Brasil Completo + Principais Internacionais)
             const DATABASE_AEROPORTOS = [
-                { iata: 'GRU', cidade: 'São Paulo', nome: 'São Paulo - Guarulhos (GRU)', keywords: 'SAO PAULO GUARULHOS GRU SP' },
-                { iata: 'CGH', cidade: 'São Paulo', nome: 'São Paulo - Congonhas (CGH)', keywords: 'SAO PAULO CONGONHAS CGH SP' },
-                { iata: 'VCP', cidade: 'Campinas', nome: 'Campinas - Viracopos (VCP)', keywords: 'CAMPINAS VIRACOPOS VCP SP SÃO PAULO' },
-                { iata: 'GYN', cidade: 'Goiânia', nome: 'Goiânia - Santa Genoveva (GYN)', keywords: 'GOIANIA GOIÂNIA SANTA GENOVEVA GYN GO' },
-                { iata: 'BSB', cidade: 'Brasília', nome: 'Brasília - Juscelino Kubitschek (BSB)', keywords: 'BRASILIA BRASÍLIA BSB DF' },
-                { iata: 'GIG', cidade: 'Rio de Janeiro', nome: 'Rio de Janeiro - Galeão (GIG)', keywords: 'RIO DE JANEIRO GALEAO GIG RJ' },
-                { iata: 'SDU', cidade: 'Rio de Janeiro', nome: 'Rio de Janeiro - Santos Dumont (SDU)', keywords: 'RIO DE JANEIRO SANTOS DUMONT SDU RJ' },
-                { iata: 'CNF', cidade: 'Belo Horizonte', nome: 'Belo Horizonte - Confins (CNF)', keywords: 'BELO HORIZONTE CONFINS CNF MG BH' },
-                { iata: 'IAH', cidade: 'Houston', nome: 'Houston - George Bush (IAH)', keywords: 'HOUSTON GEORGE BUSH IAH TEXAS EUA USA' },
-                { iata: 'MIA', cidade: 'Miami', nome: 'Miami International (MIA)', keywords: 'MIAMI MIA FLORIDA EUA USA' },
-                { iata: 'JFK', cidade: 'Nova York', nome: 'Nova York - John F. Kennedy (JFK)', keywords: 'NEW YORK NOVA YORK JFK NY EUA USA' },
-                { iata: 'MCO', cidade: 'Orlando', nome: 'Orlando International (MCO)', keywords: 'ORLANDO MCO FLORIDA EUA USA' }
+                // SUL
+                { iata: 'POA', cidade: 'Porto Alegre', nome: 'Porto Alegre - Salgado Filho (POA)', keywords: 'PORTO ALEGRE SALGADO FILHO POA RS' },
+                { iata: 'CWB', cidade: 'Curitiba', nome: 'Curitiba - Afonso Pena (CWB)', keywords: 'CURITIBA AFONSO PENA CWB PR' },
+                { iata: 'FLN', cidade: 'Florianópolis', nome: 'Florianópolis - Hercílio Luz (FLN)', keywords: 'FLORIANOPOLIS FLORIANÓPOLIS HERCILIO LUZ FLN SC' },
+                { iata: 'IGU', cidade: 'Foz do Iguaçu', nome: 'Foz do Iguaçu - Cataratas (IGU)', keywords: 'FOZ DO IGUACU FOZ DO IGUAÇU IGU PR CATARATAS' },
+                { iata: 'NVG', cidade: 'Navegantes', nome: 'Navegantes - Ministro Victor Konder (NVG)', keywords: 'NAVEGANTES NVG SC BALNEARIO CAMBORIU' },
+                { iata: 'LDB', cidade: 'Londrina', nome: 'Londrina (LDB)', keywords: 'LONDRINA LDB PR' },
+                { iata: 'MGF', cidade: 'Maringá', nome: 'Maringá (MGF)', keywords: 'MARINGA MARINGÁ MGF PR' },
+                { iata: 'JOI', cidade: 'Joinville', nome: 'Joinville (JOI)', keywords: 'JOINVILLE JOI SC' },
+                { iata: 'XAP', cidade: 'Chapecó', nome: 'Chapecó (XAP)', keywords: 'CHAPECO CHAPECÓ XAP SC' },
+                // SUDESTE
+                { iata: 'GRU', cidade: 'São Paulo', nome: 'São Paulo - Guarulhos Intl (GRU)', keywords: 'SAO PAULO SÃO PAULO GUARULHOS GRU SP GUARULHOS INTL' },
+                { iata: 'CGH', cidade: 'São Paulo', nome: 'São Paulo - Congonhas (CGH)', keywords: 'SAO PAULO SÃO PAULO CONGONHAS CGH SP' },
+                { iata: 'VCP', cidade: 'Campinas', nome: 'Campinas - Viracopos (VCP)', keywords: 'CAMPINAS VIRACOPOS VCP SP SÃO PAULO SAO PAULO' },
+                { iata: 'SDU', cidade: 'Rio de Janeiro', nome: 'Rio de Janeiro - Santos Dumont (SDU)', keywords: 'RIO DE JANEIRO SANTOS DUMONT SDU RJ RIO' },
+                { iata: 'GIG', cidade: 'Rio de Janeiro', nome: 'Rio de Janeiro - Galeão Intl (GIG)', keywords: 'RIO DE JANEIRO GALEAO GALEÃO GIG RJ RIO INTERNATIONAL' },
+                { iata: 'CNF', cidade: 'Belo Horizonte', nome: 'Belo Horizonte - Confins (CNF)', keywords: 'BELO HORIZONTE CONFINS CNF MG BH MINAS' },
+                { iata: 'VIX', cidade: 'Vitória', nome: 'Vitória - Eurico de Aguiar (VIX)', keywords: 'VITORIA VITÓRIA EURICO AGUIAR VIX ES ESPIRITO SANTO' },
+                { iata: 'RAO', cidade: 'Ribeirão Preto', nome: 'Ribeirão Preto (RAO)', keywords: 'RIBEIRAO PRETO RIBEIRÃO PRETO RAO SP' },
+                { iata: 'SJP', cidade: 'São José do Rio Preto', nome: 'São José do Rio Preto (SJP)', keywords: 'SAO JOSE DO RIO PRETO SÃO JOSÉ DO RIO PRETO SJP SP' },
+                { iata: 'UDI', cidade: 'Uberlândia', nome: 'Uberlândia (UDI)', keywords: 'UBERLANDIA UBERLÂNDIA UDI MG' },
+                // CENTRO-OESTE
+                { iata: 'GYN', cidade: 'Goiânia', nome: 'Goiânia - Santa Genoveva (GYN)', keywords: 'GOIANIA GOIÂNIA SANTA GENOVEVA GYN GO GOIAS GOIÁS' },
+                { iata: 'BSB', cidade: 'Brasília', nome: 'Brasília - Juscelino Kubitschek (BSB)', keywords: 'BRASILIA BRASÍLIA JUSCELINO KUBITSCHEK BSB DF DISTRITO FEDERAL' },
+                { iata: 'CGB', cidade: 'Cuiabá', nome: 'Cuiabá - Marechal Rondon (CGB)', keywords: 'CUIABA CUIABÁ MARECHAL RONDON CGB MT MATO GROSSO' },
+                { iata: 'CGR', cidade: 'Campo Grande', nome: 'Campo Grande (CGR)', keywords: 'CAMPO GRANDE CGR MS MATO GROSSO DO SUL' },
+                // NORDESTE
+                { iata: 'SSA', cidade: 'Salvador', nome: 'Salvador - Dep. Luís Eduardo (SSA)', keywords: 'SALVADOR LUIS EDUARDO SSA BA BAHIA' },
+                { iata: 'REC', cidade: 'Recife', nome: 'Recife - Guararapes (REC)', keywords: 'RECIFE GUARARAPES REC PE PERNAMBUCO' },
+                { iata: 'FOR', cidade: 'Fortaleza', nome: 'Fortaleza - Pinto Martins (FOR)', keywords: 'FORTALEZA PINTO MARTINS FOR CE CEARA CEARÁ' },
+                { iata: 'NAT', cidade: 'Natal', nome: 'Natal - São Gonçalo do Amarante (NAT)', keywords: 'NATAL SAO GONCALO DO AMARANTE SÃO GONÇALO NAT RN RIO GRANDE DO NORTE' },
+                { iata: 'MCZ', cidade: 'Maceió', nome: 'Maceió - Zumbi dos Palmares (MCZ)', keywords: 'MACEIO MACEIÓ ZUMBI DOS PALMARES MCZ AL ALAGOAS' },
+                { iata: 'JPA', cidade: 'João Pessoa', nome: 'João Pessoa - Castro Pinto (JPA)', keywords: 'JOAO PESSOA JOÃO PESSOA CASTRO PINTO JPA PB PARAIBA PARAÍBA' },
+                { iata: 'AJU', cidade: 'Aracaju', nome: 'Aracaju - Santa Maria (AJU)', keywords: 'ARACAJU SANTA MARIA AJU SE SERGIPE' },
+                { iata: 'SLZ', cidade: 'São Luís', nome: 'São Luís - Cunha Machado (SLZ)', keywords: 'SAO LUIS SÃO LUÍS CUNHA MACHADO SLZ MA MARANHAO MARANHÃO' },
+                { iata: 'THE', cidade: 'Teresina', nome: 'Teresina (THE)', keywords: 'TERESINA THE PI PIAUI PIAUÍ' },
+                { iata: 'IOS', cidade: 'Ilhéus', nome: 'Ilhéus (IOS)', keywords: 'ILHEUS ILHÉUS IOS BA' },
+                { iata: 'PNZ', cidade: 'Petrolina', nome: 'Petrolina (PNZ)', keywords: 'PETROLINA PNZ PE' },
+                { iata: 'JDO', cidade: 'Juazeiro do Norte', nome: 'Juazeiro do Norte (JDO)', keywords: 'JUAZEIRO DO NORTE JDO CE' },
+                // NORTE
+                { iata: 'MAO', cidade: 'Manaus', nome: 'Manaus - Eduardo Gomes (MAO)', keywords: 'MANAUS EDUARDO GOMES MAO AM AMAZONAS' },
+                { iata: 'BEL', cidade: 'Belém', nome: 'Belém - Val-de-Cans (BEL)', keywords: 'BELEM BELÉM VAL DE CANS BEL PA PARA PARÁ' },
+                { iata: 'PMW', cidade: 'Palmas', nome: 'Palmas (PMW)', keywords: 'PALMAS PMW TO TOCANTINS' },
+                { iata: 'PVH', cidade: 'Porto Velho', nome: 'Porto Velho (PVH)', keywords: 'PORTO VELHO PVH RO RONDONIA RONDÔNIA' },
+                { iata: 'RBR', cidade: 'Rio Branco', nome: 'Rio Branco (RBR)', keywords: 'RIO BRANCO RBR AC ACRE' },
+                { iata: 'MCP', cidade: 'Macapá', nome: 'Macapá (MCP)', keywords: 'MACAPA MACAPÁ MCP AP AMAPA AMAPÁ' },
+                { iata: 'BVB', cidade: 'Boa Vista', nome: 'Boa Vista (BVB)', keywords: 'BOA VISTA BVB RR RORAIMA' },
+                // INTERNACIONAIS (Principais destinos de Brasileiros)
+                { iata: 'IAH', cidade: 'Houston', nome: 'Houston - George Bush Intl (IAH)', keywords: 'HOUSTON GEORGE BUSH IAH TEXAS EUA USA INTERCONTINENTAL' },
+                { iata: 'MIA', cidade: 'Miami', nome: 'Miami International (MIA)', keywords: 'MIAMI MIA FLORIDA EUA USA INTERNATIONAL' },
+                { iata: 'MCO', cidade: 'Orlando', nome: 'Orlando International (MCO)', keywords: 'ORLANDO MCO FLORIDA EUA USA DISNEY' },
+                { iata: 'JFK', cidade: 'Nova York', nome: 'Nova York - John F. Kennedy (JFK)', keywords: 'NEW YORK NOVA YORK JFK NY EUA USA KENNEDY' },
+                { iata: 'EWR', cidade: 'Newark', nome: 'Nova York - Newark (EWR)', keywords: 'NEWARK NEW YORK NOVA YORK EWR NJ EUA USA' },
+                { iata: 'LAX', cidade: 'Los Angeles', nome: 'Los Angeles International (LAX)', keywords: 'LOS ANGELES LAX CALIFORNIA EUA USA' },
+                { iata: 'LIS', cidade: 'Lisboa', nome: 'Lisboa - Humberto Delgado (LIS)', keywords: 'LISBOA HUMBERTO DELGADO LIS PORTUGAL EUROPA' },
+                { iata: 'OPO', cidade: 'Porto', nome: 'Porto - Francisco Sá Carneiro (OPO)', keywords: 'PORTO FRANCISCO SA CARNEIRO OPO PORTUGAL EUROPA' },
+                { iata: 'MAD', cidade: 'Madri', nome: 'Madri - Barajas (MAD)', keywords: 'MADRI MADRID BARAJAS MAD ESPANHA EUROPA' },
+                { iata: 'CDG', cidade: 'Paris', nome: 'Paris - Charles de Gaulle (CDG)', keywords: 'PARIS CHARLES DE GAULLE CDG FRANCA FRANÇA EUROPA' },
+                { iata: 'LHR', cidade: 'Londres', nome: 'Londres - Heathrow (LHR)', keywords: 'LONDRES LONDON HEATHROW LHR INGLATERRA REINO UNIDO EUROPA' },
+                { iata: 'EZE', cidade: 'Buenos Aires', nome: 'Buenos Aires - Ezeiza (EZE)', keywords: 'BUENOS AIRES EZEIZA EZE ARGENTINA' },
+                { iata: 'AEP', cidade: 'Buenos Aires', nome: 'Buenos Aires - Aeroparque (AEP)', keywords: 'BUENOS AIRES AEROPARQUE AEP ARGENTINA' },
+                { iata: 'SCL', cidade: 'Santiago', nome: 'Santiago - Arturo Merino (SCL)', keywords: 'SANTIAGO CHILE ARTURO MERINO SCL' },
+                { iata: 'MVD', cidade: 'Montevidéu', nome: 'Montevidéu (MVD)', keywords: 'MONTEVIDEO MONTEVIDÉU MVD URUGUAI' }
             ];
 
             const REGIOES_DATABASE = {
@@ -205,12 +256,11 @@
                 }
             };
 
-            // Remove acentos e caracteres especiais para busca justa
             function normalizarTexto(texto) {
                 return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
             }
 
-            // 2. LOGICA DO DROPDOWN FLUTUANTE (AUTOCOMPLETE)
+            // ENGENHARIA DO DROPDOWN FLUTUANTE ESTILO COMPANHIA AÉREA
             function configurarAutocomplete(idInput, idSuggestions) {
                 const inputEl = document.getElementById(idInput);
                 const sugEl = document.getElementById(idSuggestions);
@@ -224,7 +274,7 @@
                         return;
                     }
 
-                    // Filtra os aeroportos por código ou palavras-chave
+                    // Procura termos que batem com o código IATA, Cidade, Estado ou palavras-chave
                     const resultados = DATABASE_AEROPORTOS.filter(item => 
                         item.iata.includes(query) || normalizarTexto(item.keywords).includes(query)
                     );
@@ -236,13 +286,19 @@
 
                     resultados.forEach(aeroporto => {
                         const div = document.createElement('div');
-                        div.className = 'p-2.5 hover:bg-slate-800 cursor-pointer text-slate-200 transition-colors font-sans text-xs flex justify-between items-center';
-                        div.innerHTML = `<span>${aeroporto.nome}</span> <span class="text-gold-400 font-mono font-bold">${aeroporto.iata}</span>`;
+                        div.className = 'p-3 hover:bg-slate-800 cursor-pointer text-slate-200 transition-colors font-sans text-xs flex justify-between items-center border-b border-slate-800/50';
+                        div.innerHTML = `
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-slate-100">${aeroporto.cidade}</span>
+                                <span class="text-[10px] text-slate-400 font-light">${aeroporto.nome.split(' - ')[1] || aeroporto.nome}</span>
+                            </div>
+                            <span class="bg-slate-950 px-2 py-1 rounded text-gold-400 font-mono font-bold tracking-wider border border-slate-800">${aeroporto.iata}</span>
+                        `;
                         
                         div.addEventListener('click', () => {
-                            inputEl.value = aeroporto.iata; // Escreve a sigla IATA limpa no input
+                            inputEl.value = aeroporto.iata;
                             sugEl.classList.add('hidden');
-                            renderizar(); // Atualiza os títulos e cards instantaneamente
+                            renderizar();
                         });
                         sugEl.appendChild(div);
                     });
@@ -250,7 +306,6 @@
                     sugEl.classList.remove('hidden');
                 });
 
-                // Fecha a caixinha se o usuário clicar fora do input
                 document.addEventListener('click', (e) => {
                     if (e.target !== inputEl && e.target !== sugEl) {
                         sugEl.classList.add('hidden');
@@ -258,7 +313,6 @@
                 });
             }
 
-            // Ativa o autocomplete nos dois campos do formulário
             configurarAutocomplete('origem', 'suggestions-origem');
             configurarAutocomplete('destino', 'suggestions-destino');
 
@@ -314,7 +368,6 @@
                 const origIata = document.getElementById('origem').value.toUpperCase().trim();
                 const destIata = document.getElementById('destino').value.toUpperCase().trim();
                 
-                // Encontra os objetos completos para montar o título amigável na tela
                 const dadosOrigem = DATABASE_AEROPORTOS.find(item => item.iata === origIata);
                 const dadosDestino = DATABASE_AEROPORTOS.find(item => item.iata === destIata);
 
@@ -383,3 +436,13 @@
                 document.getElementById('btn-exec').className = classeSelecionada === 'Executiva' ? "flex-1 bg-gold-400 text-navy-950 font-bold py-2 rounded" : "flex-1 bg-navy-950 border border-slate-700 py-2 rounded text-slate-300";
                 renderizar();
             });
+
+            ['origem', 'destino', 'cpp-latam', 'cpp-smiles', 'cpp-azul', 'cpp-tap'].forEach(id => {
+                document.getElementById(id).addEventListener('input', renderizar);
+            });
+
+            renderizar();
+        });
+    </script>
+</body>
+</html>
