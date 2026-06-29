@@ -110,7 +110,7 @@
                         <div class="text-amber-400 font-bold text-xs tracking-wider uppercase mb-2">💰 Tarifa Pagante</div>
                         <p id="res-dinheiro" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
                         <p id="res-dinheiro-detalhe" class="text-[11px] text-slate-500 mt-2 font-mono">—</p>
-                        <a id="btn-link-dinheiro" href="https://www.google.com/travel/flights" target="_blank" class="mt-4 block text-center bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded text-xs transition-colors">Comprar Passagem Real</a>
+                        <a id="btn-link-dinheiro" href="#" target="_blank" class="mt-4 block text-center bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded text-xs transition-colors">Comprar Passagem Real</a>
                     </div>
 
                     <div id="card-latam" class="bg-navy-900 p-5 rounded-xl border border-slate-800 transition-all duration-300">
@@ -121,7 +121,7 @@
                         <p id="cia-latam" class="text-xs text-slate-400">—</p>
                         <p id="res-latam-reais" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
                         <p id="res-latam-milhas" class="text-xs text-slate-400 mt-1 font-mono">0 milhas</p>
-                        <a id="btn-link-latam" href="https://www.latampass.com" target="_blank" class="mt-4 block text-center bg-slate-800 hover:bg-slate-700 text-fuchsia-400 border border-fuchsia-900/40 font-semibold py-2 rounded text-xs transition-colors">Emitir no LATAM Pass</a>
+                        <a id="btn-link-latam" href="#" target="_blank" class="mt-4 block text-center bg-slate-800 hover:bg-slate-700 text-fuchsia-400 border border-fuchsia-900/40 font-semibold py-2 rounded text-xs transition-colors">Emitir no LATAM Pass</a>
                     </div>
 
                     <div id="card-smiles" class="bg-navy-900 p-5 rounded-xl border border-slate-800 transition-all duration-300">
@@ -132,7 +132,7 @@
                         <p id="cia-smiles" class="text-xs text-slate-400">—</p>
                         <p id="res-smiles-reais" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
                         <p id="res-smiles-milhas" class="text-xs text-slate-400 mt-1 font-mono">0 milhas</p>
-                        <a id="btn-link-smiles" href="https://www.smiles.com.br" target="_blank" class="mt-4 block text-center bg-slate-800 hover:bg-slate-700 text-orange-400 border border-orange-900/40 font-semibold py-2 rounded text-xs transition-colors">Emitir na Smiles</a>
+                        <a id="btn-link-smiles" href="#" target="_blank" class="mt-4 block text-center bg-slate-800 hover:bg-slate-700 text-orange-400 border border-orange-900/40 font-semibold py-2 rounded text-xs transition-colors">Emitir na Smiles</a>
                     </div>
 
                     <div id="card-tap" class="bg-navy-900 p-5 rounded-xl border border-slate-800 transition-all duration-300">
@@ -157,20 +157,9 @@
         document.addEventListener("DOMContentLoaded", () => {
             let classeSelecionada = 'Econômica';
             let precoDinheiroAtual = 0;
+            let linkApiDinheiro = '';
 
-            // BANCO DE DADOS COMPLETO DE AEROPORTOS (Brasil Completo + Principais Internacionais)
             const DATABASE_AEROPORTOS = [
-                // SUL
-                { iata: 'POA', cidade: 'Porto Alegre', nome: 'Porto Alegre - Salgado Filho (POA)', keywords: 'PORTO ALEGRE SALGADO FILHO POA RS' },
-                { iata: 'CWB', cidade: 'Curitiba', nome: 'Curitiba - Afonso Pena (CWB)', keywords: 'CURITIBA AFONSO PENA CWB PR' },
-                { iata: 'FLN', cidade: 'Florianópolis', nome: 'Florianópolis - Hercílio Luz (FLN)', keywords: 'FLORIANOPOLIS FLORIANÓPOLIS HERCILIO LUZ FLN SC' },
-                { iata: 'IGU', cidade: 'Foz do Iguaçu', nome: 'Foz do Iguaçu - Cataratas (IGU)', keywords: 'FOZ DO IGUACU FOZ DO IGUAÇU IGU PR CATARATAS' },
-                { iata: 'NVG', cidade: 'Navegantes', nome: 'Navegantes - Ministro Victor Konder (NVG)', keywords: 'NAVEGANTES NVG SC BALNEARIO CAMBORIU' },
-                { iata: 'LDB', cidade: 'Londrina', nome: 'Londrina (LDB)', keywords: 'LONDRINA LDB PR' },
-                { iata: 'MGF', cidade: 'Maringá', nome: 'Maringá (MGF)', keywords: 'MARINGA MARINGÁ MGF PR' },
-                { iata: 'JOI', cidade: 'Joinville', nome: 'Joinville (JOI)', keywords: 'JOINVILLE JOI SC' },
-                { iata: 'XAP', cidade: 'Chapecó', nome: 'Chapecó (XAP)', keywords: 'CHAPECO CHAPECÓ XAP SC' },
-                // SUDESTE
                 { iata: 'GRU', cidade: 'São Paulo', nome: 'São Paulo - Guarulhos Intl (GRU)', keywords: 'SAO PAULO SÃO PAULO GUARULHOS GRU SP GUARULHOS INTL' },
                 { iata: 'CGH', cidade: 'São Paulo', nome: 'São Paulo - Congonhas (CGH)', keywords: 'SAO PAULO SÃO PAULO CONGONHAS CGH SP' },
                 { iata: 'VCP', cidade: 'Campinas', nome: 'Campinas - Viracopos (VCP)', keywords: 'CAMPINAS VIRACOPOS VCP SP SÃO PAULO SAO PAULO' },
@@ -181,12 +170,10 @@
                 { iata: 'RAO', cidade: 'Ribeirão Preto', nome: 'Ribeirão Preto (RAO)', keywords: 'RIBEIRAO PRETO RIBEIRÃO PRETO RAO SP' },
                 { iata: 'SJP', cidade: 'São José do Rio Preto', nome: 'São José do Rio Preto (SJP)', keywords: 'SAO JOSE DO RIO PRETO SÃO JOSÉ DO RIO PRETO SJP SP' },
                 { iata: 'UDI', cidade: 'Uberlândia', nome: 'Uberlândia (UDI)', keywords: 'UBERLANDIA UBERLÂNDIA UDI MG' },
-                // CENTRO-OESTE
                 { iata: 'GYN', cidade: 'Goiânia', nome: 'Goiânia - Santa Genoveva (GYN)', keywords: 'GOIANIA GOIÂNIA SANTA GENOVEVA GYN GO GOIAS GOIÁS' },
                 { iata: 'BSB', cidade: 'Brasília', nome: 'Brasília - Juscelino Kubitschek (BSB)', keywords: 'BRASILIA BRASÍLIA JUSCELINO KUBITSCHEK BSB DF DISTRITO FEDERAL' },
                 { iata: 'CGB', cidade: 'Cuiabá', nome: 'Cuiabá - Marechal Rondon (CGB)', keywords: 'CUIABA CUIABÁ MARECHAL RONDON CGB MT MATO GROSSO' },
                 { iata: 'CGR', cidade: 'Campo Grande', nome: 'Campo Grande (CGR)', keywords: 'CAMPO GRANDE CGR MS MATO GROSSO DO SUL' },
-                // NORDESTE
                 { iata: 'SSA', cidade: 'Salvador', nome: 'Salvador - Dep. Luís Eduardo (SSA)', keywords: 'SALVADOR LUIS EDUARDO SSA BA BAHIA' },
                 { iata: 'REC', cidade: 'Recife', nome: 'Recife - Guararapes (REC)', keywords: 'RECIFE GUARARAPES REC PE PERNAMBUCO' },
                 { iata: 'FOR', cidade: 'Fortaleza', nome: 'Fortaleza - Pinto Martins (FOR)', keywords: 'FORTALEZA PINTO MARTINS FOR CE CEARA CEARÁ' },
@@ -196,33 +183,16 @@
                 { iata: 'AJU', cidade: 'Aracaju', nome: 'Aracaju - Santa Maria (AJU)', keywords: 'ARACAJU SANTA MARIA AJU SE SERGIPE' },
                 { iata: 'SLZ', cidade: 'São Luís', nome: 'São Luís - Cunha Machado (SLZ)', keywords: 'SAO LUIS SÃO LUÍS CUNHA MACHADO SLZ MA MARANHAO MARANHÃO' },
                 { iata: 'THE', cidade: 'Teresina', nome: 'Teresina (THE)', keywords: 'TERESINA THE PI PIAUI PIAUÍ' },
-                { iata: 'IOS', cidade: 'Ilhéus', nome: 'Ilhéus (IOS)', keywords: 'ILHEUS ILHÉUS IOS BA' },
-                { iata: 'PNZ', cidade: 'Petrolina', nome: 'Petrolina (PNZ)', keywords: 'PETROLINA PNZ PE' },
-                { iata: 'JDO', cidade: 'Juazeiro do Norte', nome: 'Juazeiro do Norte (JDO)', keywords: 'JUAZEIRO DO NORTE JDO CE' },
-                // NORTE
                 { iata: 'MAO', cidade: 'Manaus', nome: 'Manaus - Eduardo Gomes (MAO)', keywords: 'MANAUS EDUARDO GOMES MAO AM AMAZONAS' },
                 { iata: 'BEL', cidade: 'Belém', nome: 'Belém - Val-de-Cans (BEL)', keywords: 'BELEM BELÉM VAL DE CANS BEL PA PARA PARÁ' },
                 { iata: 'PMW', cidade: 'Palmas', nome: 'Palmas (PMW)', keywords: 'PALMAS PMW TO TOCANTINS' },
-                { iata: 'PVH', cidade: 'Porto Velho', nome: 'Porto Velho (PVH)', keywords: 'PORTO VELHO PVH RO RONDONIA RONDÔNIA' },
-                { iata: 'RBR', cidade: 'Rio Branco', nome: 'Rio Branco (RBR)', keywords: 'RIO BRANCO RBR AC ACRE' },
-                { iata: 'MCP', cidade: 'Macapá', nome: 'Macapá (MCP)', keywords: 'MACAPA MACAPÁ MCP AP AMAPA AMAPÁ' },
-                { iata: 'BVB', cidade: 'Boa Vista', nome: 'Boa Vista (BVB)', keywords: 'BOA VISTA BVB RR RORAIMA' },
-                // INTERNACIONAIS (Principais destinos de Brasileiros)
                 { iata: 'IAH', cidade: 'Houston', nome: 'Houston - George Bush Intl (IAH)', keywords: 'HOUSTON GEORGE BUSH IAH TEXAS EUA USA INTERCONTINENTAL' },
                 { iata: 'MIA', cidade: 'Miami', nome: 'Miami International (MIA)', keywords: 'MIAMI MIA FLORIDA EUA USA INTERNATIONAL' },
                 { iata: 'MCO', cidade: 'Orlando', nome: 'Orlando International (MCO)', keywords: 'ORLANDO MCO FLORIDA EUA USA DISNEY' },
                 { iata: 'JFK', cidade: 'Nova York', nome: 'Nova York - John F. Kennedy (JFK)', keywords: 'NEW YORK NOVA YORK JFK NY EUA USA KENNEDY' },
                 { iata: 'EWR', cidade: 'Newark', nome: 'Nova York - Newark (EWR)', keywords: 'NEWARK NEW YORK NOVA YORK EWR NJ EUA USA' },
-                { iata: 'LAX', cidade: 'Los Angeles', nome: 'Los Angeles International (LAX)', keywords: 'LOS ANGELES LAX CALIFORNIA EUA USA' },
                 { iata: 'LIS', cidade: 'Lisboa', nome: 'Lisboa - Humberto Delgado (LIS)', keywords: 'LISBOA HUMBERTO DELGADO LIS PORTUGAL EUROPA' },
-                { iata: 'OPO', cidade: 'Porto', nome: 'Porto - Francisco Sá Carneiro (OPO)', keywords: 'PORTO FRANCISCO SA CARNEIRO OPO PORTUGAL EUROPA' },
-                { iata: 'MAD', cidade: 'Madri', nome: 'Madri - Barajas (MAD)', keywords: 'MADRI MADRID BARAJAS MAD ESPANHA EUROPA' },
-                { iata: 'CDG', cidade: 'Paris', nome: 'Paris - Charles de Gaulle (CDG)', keywords: 'PARIS CHARLES DE GAULLE CDG FRANCA FRANÇA EUROPA' },
-                { iata: 'LHR', cidade: 'Londres', nome: 'Londres - Heathrow (LHR)', keywords: 'LONDRES LONDON HEATHROW LHR INGLATERRA REINO UNIDO EUROPA' },
-                { iata: 'EZE', cidade: 'Buenos Aires', nome: 'Buenos Aires - Ezeiza (EZE)', keywords: 'BUENOS AIRES EZEIZA EZE ARGENTINA' },
-                { iata: 'AEP', cidade: 'Buenos Aires', nome: 'Buenos Aires - Aeroparque (AEP)', keywords: 'BUENOS AIRES AEROPARQUE AEP ARGENTINA' },
-                { iata: 'SCL', cidade: 'Santiago', nome: 'Santiago - Arturo Merino (SCL)', keywords: 'SANTIAGO CHILE ARTURO MERINO SCL' },
-                { iata: 'MVD', cidade: 'Montevidéu', nome: 'Montevidéu (MVD)', keywords: 'MONTEVIDEO MONTEVIDÉU MVD URUGUAI' }
+                { iata: 'EZE', cidade: 'Buenos Aires', nome: 'Buenos Aires - Ezeiza (EZE)', keywords: 'BUENOS AIRES EZEIZA EZE ARGENTINA' }
             ];
 
             const REGIOES_DATABASE = {
@@ -260,7 +230,6 @@
                 return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
             }
 
-            // ENGENHARIA DO DROPDOWN FLUTUANTE ESTILO COMPANHIA AÉREA
             function configurarAutocomplete(idInput, idSuggestions) {
                 const inputEl = document.getElementById(idInput);
                 const sugEl = document.getElementById(idSuggestions);
@@ -274,7 +243,6 @@
                         return;
                     }
 
-                    // Procura termos que batem com o código IATA, Cidade, Estado ou palavras-chave
                     const resultados = DATABASE_AEROPORTOS.filter(item => 
                         item.iata.includes(query) || normalizarTexto(item.keywords).includes(query)
                     );
@@ -349,17 +317,19 @@
                     if (Array.isArray(payload) && payload.length > 0) {
                         const vooResult = payload[0];
                         precoDinheiroAtual = vooResult.preco;
+                        linkApiDinheiro = vooResult.link;
                         document.getElementById('preco-manual').value = precoDinheiroAtual;
                         document.getElementById('res-dinheiro-detalhe').innerText = `Tarifa via [${vooResult.cia}] em ${vooResult.data}`;
-                        document.getElementById('btn-link-dinheiro').href = vooResult.link || "https://google.com/travel/flights";
                     } else {
                         precoDinheiroAtual = 0;
+                        linkApiDinheiro = '';
                         document.getElementById('res-dinheiro').innerText = "Esgotado";
                     }
                     renderizar();
                 } catch (err) {
                     document.getElementById('res-dinheiro').innerText = "Falha API";
                     precoDinheiroAtual = 0;
+                    linkApiDinheiro = '';
                     renderizar();
                 }
             });
@@ -367,6 +337,7 @@
             function renderizar() {
                 const origIata = document.getElementById('origem').value.toUpperCase().trim();
                 const destIata = document.getElementById('destino').value.toUpperCase().trim();
+                const dataIdaRaw = document.getElementById('data-ida').value;
                 
                 const dadosOrigem = DATABASE_AEROPORTOS.find(item => item.iata === origIata);
                 const dadosDestino = DATABASE_AEROPORTOS.find(item => item.iata === destIata);
@@ -376,6 +347,19 @@
 
                 document.getElementById('txt-origem').innerText = nomeOrigemVisual;
                 document.getElementById('txt-destino').innerText = nomeDestinoVisual;
+
+                // MOTOR DE DEEP LINKING: Calcula timestamps e monta links reais das companhias
+                let timestampIda = dataIdaRaw ? new Date(dataIdaRaw + "T12:00:00").getTime() : new Date().getTime();
+                
+                document.getElementById('btn-link-smiles').href = `https://www.smiles.com.br/mfe/voos-search?tripType=1&originAirport=${origIata}&destinationAirport=${destIata}&departureDate=${timestampIda}&adults=1&children=0&infants=0&isSeuViaje=false&cabinType=all`;
+                
+                document.getElementById('btn-link-latam').href = `https://www.latamairlines.com/br/pt/flight-search?origin=${origIata}&outbound=${dataIdaRaw}&destination=${destIata}&adt=1&chd=0&inf=0&cabin=Economy&trip=OW`;
+
+                if (linkApiDinheiro) {
+                    document.getElementById('btn-link-dinheiro').href = linkApiDinheiro;
+                } else {
+                    document.getElementById('btn-link-dinheiro').href = `https://www.google.com/travel/flights?q=Flights%20to%20${destIata}%20from%20${origIata}%20on%20${dataIdaRaw}`;
+                }
 
                 const rotasInternacionais = ['IAH', 'JFK', 'MIA', 'MCO'];
                 const regiao = rotasInternacionais.includes(destIata) ? 'AMERICA_NORTE' : 'DOMESTICO_BR';
@@ -409,6 +393,8 @@
 
                 if (precoDinheiroAtual > 0) {
                     document.getElementById('res-dinheiro').innerText = `R$ ${precoDinheiroAtual.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+                } else {
+                    document.getElementById('res-dinheiro').innerText = "R$ 0,00";
                 }
 
                 let opcoes = [
