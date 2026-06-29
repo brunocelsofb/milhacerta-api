@@ -143,7 +143,7 @@
                         <p id="cia-tap" class="text-xs text-slate-400">—</p>
                         <p id="res-tap-reais" class="text-3xl font-black text-white mt-1">R$ 0,00</p>
                         <p id="res-tap-milhas" class="text-xs text-slate-400 mt-1 font-mono">0 milhas</p>
-                        <a id="btn-link-tap" href="https://www.flytap.com" target="_blank" class="mt-4 block text-center bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-900/40 font-semibold py-2 rounded text-xs transition-colors">Emitir via TAP Miles&Go</a>
+                        <a id="btn-link-tap" href="https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas" target="_blank" class="mt-4 block text-center bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-900/40 font-semibold py-2 rounded text-xs transition-colors">Emitir via TAP Miles&Go</a>
                     </div>
                 </div>
                 <div id="box-alerta" class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl text-xs text-slate-300 leading-relaxed">
@@ -158,6 +158,7 @@
             let classeSelecionada = 'Econômica';
             let precoDinheiroAtual = 0;
             let linkApiDinheiro = '';
+            let textoDinheiroExibicao = 'R$ 0,00'; // Var de estado protetora contra o bug do R$ 0,00 fixo
 
             const DATABASE_AEROPORTOS = [
                 { iata: 'GRU', cidade: 'São Paulo', nome: 'São Paulo - Guarulhos Intl (GRU)', keywords: 'SAO PAULO SÃO PAULO GUARULHOS GRU SP GUARULHOS INTL' },
@@ -189,8 +190,8 @@
                 { iata: 'IAH', cidade: 'Houston', nome: 'Houston - George Bush Intl (IAH)', keywords: 'HOUSTON GEORGE BUSH IAH TEXAS EUA USA INTERCONTINENTAL' },
                 { iata: 'MIA', cidade: 'Miami', nome: 'Miami International (MIA)', keywords: 'MIAMI MIA FLORIDA EUA USA INTERNATIONAL' },
                 { iata: 'MCO', cidade: 'Orlando', nome: 'Orlando International (MCO)', keywords: 'ORLANDO MCO FLORIDA EUA USA DISNEY' },
-                { iata: 'JFK', cidade: 'Nova York', nome: 'Nova York - John F. Kennedy (JFK)', keywords: 'NEW YORK NOVA YORK JFK NY EUA USA KENNEDY' },
-                { iata: 'EWR', cidade: 'Newark', nome: 'Nova York - Newark (EWR)', keywords: 'NEWARK NEW YORK NOVA YORK EWR NJ EUA USA' },
+                { iata: 'JFK', cidade: 'Nova York', nome: 'Nova York - John F. Kennedy (JFK)', keywords: 'NEW YORK NOVA YORK JFK NY EUA USA KENNEDY NYC' },
+                { iata: 'EWR', cidade: 'Newark', nome: 'Nova York - Newark (EWR)', keywords: 'NEWARK NEW YORK NOVA YORK EWR NJ EUA USA NYC' },
                 { iata: 'LIS', cidade: 'Lisboa', nome: 'Lisboa - Humberto Delgado (LIS)', keywords: 'LISBOA HUMBERTO DELGADO LIS PORTUGAL EUROPA' },
                 { iata: 'EZE', cidade: 'Buenos Aires', nome: 'Buenos Aires - Ezeiza (EZE)', keywords: 'BUENOS AIRES EZEIZA EZE ARGENTINA' }
             ];
@@ -306,6 +307,7 @@
                 const dataIda = formatarDataParaBackend(dataIdaRaw);
                 const dataVolta = formatarDataParaBackend(dataVoltaRaw);
                 
+                textoDinheiroExibicao = "Buscando...";
                 document.getElementById('res-dinheiro').innerText = "Buscando...";
                 
                 const endpoint = `/api/search?fly_from=${origIata}&fly_to=${destIata}&date_from=${dataIda}&date_to=${dataVolta}`;
@@ -318,18 +320,19 @@
                         const vooResult = payload[0];
                         precoDinheiroAtual = vooResult.preco;
                         linkApiDinheiro = vooResult.link;
+                        textoDinheiroExibicao = `R$ ${precoDinheiroAtual.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
                         document.getElementById('preco-manual').value = precoDinheiroAtual;
                         document.getElementById('res-dinheiro-detalhe').innerText = `Tarifa via [${vooResult.cia}] em ${vooResult.data}`;
                     } else {
                         precoDinheiroAtual = 0;
                         linkApiDinheiro = '';
-                        document.getElementById('res-dinheiro').innerText = "Esgotado";
+                        textoDinheiroExibicao = "Esgotado";
                     }
                     renderizar();
                 } catch (err) {
-                    document.getElementById('res-dinheiro').innerText = "Falha API";
                     precoDinheiroAtual = 0;
                     linkApiDinheiro = '';
+                    textoDinheiroExibicao = "Falha API";
                     renderizar();
                 }
             });
@@ -348,18 +351,20 @@
                 document.getElementById('txt-origem').innerText = nomeOrigemVisual;
                 document.getElementById('txt-destino').innerText = nomeDestinoVisual;
 
-                // MOTOR DE DEEP LINKING: Calcula timestamps e monta links reais das companhias
-                let timestampIda = dataIdaRaw ? new Date(dataIdaRaw + "T12:00:00").getTime() : new Date().getTime();
+                // CORREÇÃO DOS LINKS DIRETOS DA LATAM E SMILES
+                document.getElementById('btn-link-smiles').href = `https://www.smiles.com.br/voos/passagem-aerea?origem=${origIata}&destino=${destIata}&adultos=1&tipoViagem=somente_ida`;
                 
-                document.getElementById('btn-link-smiles').href = `https://www.smiles.com.br/mfe/voos-search?tripType=1&originAirport=${origIata}&destinationAirport=${destIata}&departureDate=${timestampIda}&adults=1&children=0&infants=0&isSeuViaje=false&cabinType=all`;
-                
-                document.getElementById('btn-link-latam').href = `https://www.latamairlines.com/br/pt/flight-search?origin=${origIata}&outbound=${dataIdaRaw}&destination=${destIata}&adt=1&chd=0&inf=0&cabin=Economy&trip=OW`;
+                // Formato estrito ISO exigido pelo motor da LATAM Airlines para evitar "Não encontrado"
+                document.getElementById('btn-link-latam').href = `https://www.latamairlines.com/br/pt/flight-search?origin=${origIata}&outbound=${dataIdaRaw}T12%3A00%3A00.000Z&destination=${destIata}&adt=1&chd=0&inf=0&cabin=Economy&trip=OW`;
 
                 if (linkApiDinheiro) {
                     document.getElementById('btn-link-dinheiro').href = linkApiDinheiro;
                 } else {
                     document.getElementById('btn-link-dinheiro').href = `https://www.google.com/travel/flights?q=Flights%20to%20${destIata}%20from%20${origIata}%20on%20${dataIdaRaw}`;
                 }
+
+                // Protege a exibição contra o overwrite do R$ 0,00
+                document.getElementById('res-dinheiro').innerText = textoDinheiroExibicao;
 
                 const rotasInternacionais = ['IAH', 'JFK', 'MIA', 'MCO'];
                 const regiao = rotasInternacionais.includes(destIata) ? 'AMERICA_NORTE' : 'DOMESTICO_BR';
@@ -390,12 +395,6 @@
                 document.getElementById('res-tap-reais').innerText = `R$ ${cTap.toFixed(2)}`;
                 document.getElementById('tag-tap').innerText = tabela.tap.tag;
                 document.getElementById('cia-tap').innerText = tabela.tap.cia;
-
-                if (precoDinheiroAtual > 0) {
-                    document.getElementById('res-dinheiro').innerText = `R$ ${precoDinheiroAtual.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-                } else {
-                    document.getElementById('res-dinheiro').innerText = "R$ 0,00";
-                }
 
                 let opcoes = [
                     { id: 'card-dinheiro', valor: precoDinheiroAtual > 0 ? precoDinheiroAtual : Infinity },
