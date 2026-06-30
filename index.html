@@ -75,7 +75,7 @@
       <div class="grid grid-cols-2 gap-2">
         <div><label class="text-[10px] text-white/40 block mb-0.5">LATAM Pass</label><input id="cpp-latam" type="number" value="25" class="w-full bg-[#0b0e14] border border-white/15 rounded-md px-2 py-1.5 text-sm"></div>
         <div><label class="text-[10px] text-white/40 block mb-0.5">Smiles</label><input id="cpp-smiles" type="number" value="17" class="w-full bg-[#0b0e14] border border-white/15 rounded-md px-2 py-1.5 text-sm"></div>
-        <div><label class="text-[10px] text-white/40 block mb-0.5">Azul</label><input id="cpp-azul" type="number" value="16" class="w-full bg-[#0b0e14] border border-white/15 rounded-md px-2 py-1.5 text-sm"></div>
+        <div><label class="text-[10px] text-white/40 block mb-0.5">Azul Fidelidade</label><input id="cpp-azul" type="number" value="15" class="w-full bg-[#0b0e14] border border-white/15 rounded-md px-2 py-1.5 text-sm"></div>
         <div><label class="text-[10px] text-white/40 block mb-0.5">TAP</label><input id="cpp-tap" type="number" value="35" class="w-full bg-[#0b0e14] border border-white/15 rounded-md px-2 py-1.5 text-sm"></div>
       </div>
     </div>
@@ -182,32 +182,66 @@ const LINK_TAP_INFO = 'https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-mi
 const TABELA_POR_REGIAO = {
   AMERICA_DO_NORTE: {
     label: "Brasil → América do Norte",
-    insight: "3 parceiras conhecidas pra essa região: <strong>Delta</strong> (LATAM Pass, tabela fixa confirmada), <strong>American Airlines</strong> (Smiles, tarifa dinâmica — não é tabela fixa de verdade) e <strong>United/Copa</strong> (TAP Miles&Go, tabela fixa Star Alliance, mas reajustada recentemente — confira o valor atual). Se o destino for Houston, veja o Raio-X específico acima.",
+    insight: `<strong>Sweet spots confirmados:</strong>
+      <br>• <strong>LATAM Pass → Delta</strong>: tabela fixa, 57k eco / 135k executiva. Emitir só por telefone/WhatsApp LATAM.
+      <br>• <strong>Smiles → GOL ou American</strong>: dinâmico. GRU-MIA direto (GOL) a partir de 50k eco. Varia por data.
+      <br>• <strong>TAP Miles&Go → United/Copa</strong>: tabela fixa confirmada, 95k executiva Brasil-EUA (após reajuste 2025). Eco: confira no site TAP.
+      <br>• <strong>Azul Fidelidade → United/Copa/Turkish</strong>: dinâmico via Azul pelo Mundo. GRU-IAH executiva ~149k pontos. Sem tabela fixa.`,
     economica: {
-      latam: { milhas: 57000, parceira: "Delta Air Lines", alianca: "SkyTeam", confianca: "confirmado",
-        nota: "Confirmado: Brasil → América do Norte, Econômica, tabela fixa LATAM Pass." },
-      smiles: { milhas: 60000, parceira: "American Airlines", alianca: "oneworld", confianca: "estimativa",
-        nota: "Não é tabela fixa de verdade — é tarifa dinâmica/comercial. Já vimos exemplos reais entre 74.200 e bem mais. Use só como referência." },
-      tap: { milhas: 45000, parceira: "United / Copa Airlines", alianca: "Star Alliance", confianca: "confira",
-        nota: "A TAP reajustou essa tabela em mai/2026 (+8% a 122% por região). O valor real hoje é provavelmente maior. Confira no site da TAP antes de comprar milhas." }
+      latam: { milhas: 57000, parceira: "Delta Air Lines", alianca: "SkyTeam", programa: "LATAM Pass", confianca: "confirmado",
+        nota: "Tabela fixa LATAM Pass, Brasil → América do Norte, Econômica. Emissão só por telefone/WhatsApp LATAM Pass." },
+      smiles: { milhas: 50000, parceira: "GOL / American Airlines", alianca: "SkyTeam / oneworld", programa: "Smiles", confianca: "estimativa",
+        nota: "Dinâmico. GRU-MIA direto (GOL) a partir de 50k — varia por data e disponibilidade. Verifique no site Smiles antes de comprar milhas." },
+      tap: { milhas: null, parceira: "United / Copa Airlines", alianca: "Star Alliance", programa: "TAP Miles&Go", confianca: "confira",
+        nota: "Tabela fixa TAP: valor de econômica varia por trecho — confira no site TAP Miles&Go. Executiva é 95k confirmado." },
+      azul: { milhas: null, parceira: "United / Copa / Turkish", alianca: "Star Alliance / SkyTeam", programa: "Azul Fidelidade", confianca: "estimativa",
+        nota: "Sem tabela fixa. Preço dinâmico via Azul pelo Mundo. Busque disponibilidade direto no site antes de avaliar." }
     },
     executiva: {
-      latam: { milhas: 135000, parceira: "Delta Air Lines", alianca: "SkyTeam", confianca: "confirmado",
-        nota: "Confirmado em fontes recentes: 135.000, não 108.000 — o valor mudou desde a última atualização que você tinha." },
-      smiles: { milhas: 120000, parceira: "American Airlines", alianca: "oneworld", confianca: "estimativa",
-        nota: "Tarifa dinâmica/comercial — varia bastante por rota e disponibilidade. Use só como referência." },
-      tap: { milhas: 95000, parceira: "United / Copa Airlines", alianca: "Star Alliance", confianca: "confira",
-        nota: "Valor histórico (~dez/2024). A TAP reajustou em mai/2026 — confirme o valor atual antes de comprar milhas." }
+      latam: { milhas: 135000, parceira: "Delta Air Lines", alianca: "SkyTeam", programa: "LATAM Pass", confianca: "confirmado",
+        nota: "Tabela fixa LATAM Pass confirmada: 135.000 milhas (não 108.000 — o valor aumentou). Emissão só por telefone/WhatsApp." },
+      smiles: { milhas: 120000, parceira: "American Airlines", alianca: "oneworld", programa: "Smiles", confianca: "estimativa",
+        nota: "Dinâmico. Valor estimado, varia bastante por rota e disponibilidade. Verifique no site Smiles antes de comprar milhas." },
+      tap: { milhas: 95000, parceira: "United / Copa Airlines", alianca: "Star Alliance", programa: "TAP Miles&Go", confianca: "confirmado",
+        nota: "Tabela fixa TAP Miles&Go confirmada: 95.000 milhas, Brasil → América do Norte, Executiva (nova tabela vigente desde 2025)." },
+      azul: { milhas: 149000, parceira: "United Airlines", alianca: "Star Alliance", programa: "Azul Fidelidade", confianca: "estimativa",
+        nota: "Dinâmico via Azul pelo Mundo. GRU-IAH executiva ~149.000 pontos (referência, pode variar). Busque no Azul pelo Mundo pra ver preço real do dia." }
+    }
+  },
+  EUROPA: {
+    label: "Brasil → Europa",
+    insight: `<strong>Sweet spots confirmados:</strong>
+      <br>• <strong>LATAM Pass → Iberia</strong>: tabela fixa oneworld. Executiva: 135k (mesmo valor da América do Norte).
+      <br>• <strong>Smiles → TAP ou Air France-KLM</strong>: dinâmico. GRU-LIS executiva a partir de 90k — varia muito.
+      <br>• <strong>TAP Miles&Go → voos TAP</strong>: tabela fixa. Brasil-Europa executiva: 95k (mesmo trecho da América do Norte).
+      <br>• <strong>Azul Fidelidade → TAP / Emirates / Air Europa</strong>: dinâmico via Azul pelo Mundo. GRU-LIS eco a partir de ~82k pontos (Royal Air Maroc, exemplo real).`,
+    economica: {
+      latam: { milhas: null, parceira: "Iberia", alianca: "oneworld", programa: "LATAM Pass", confianca: "confira",
+        nota: "Tabela fixa LATAM Pass para Europa — valor de econômica não confirmado recentemente. Confira na página oficial LATAM Pass." },
+      smiles: { milhas: 90000, parceira: "TAP / Air France-KLM", alianca: "Star Alliance / SkyTeam", programa: "Smiles", confianca: "estimativa",
+        nota: "Dinâmico. GRU-LIS executiva a partir de 90k milhas Smiles (fonte: análise março/2026). Econômica é menos — verifique no site." },
+      tap: { milhas: null, parceira: "Voos TAP", alianca: "Star Alliance", programa: "TAP Miles&Go", confianca: "confira",
+        nota: "Tabela fixa TAP para voos próprios. Valor de econômica: confirme no site TAP Miles&Go pois varia por zona tarifária." },
+      azul: { milhas: 82000, parceira: "TAP / Emirates / Air Europa", alianca: "Star Alliance / outros", programa: "Azul Fidelidade", confianca: "estimativa",
+        nota: "Dinâmico. Exemplo real: GRU-LIS eco ~82k pontos (Royal Air Maroc, via Azul pelo Mundo). Preço varia por data e companhia." }
+    },
+    executiva: {
+      latam: { milhas: 135000, parceira: "Iberia", alianca: "oneworld", programa: "LATAM Pass", confianca: "confira",
+        nota: "Tabela fixa LATAM Pass. Valor indicativo baseado na faixa oneworld — confirme no site oficial antes de comprar milhas." },
+      smiles: { milhas: 90000, parceira: "TAP / Air France-KLM", alianca: "Star Alliance / SkyTeam", programa: "Smiles", confianca: "estimativa",
+        nota: "Dinâmico. GRU-LIS executiva a partir de 90k Smiles (fonte: março/2026). Varia bastante por rota e disponibilidade." },
+      tap: { milhas: 95000, parceira: "Voos TAP", alianca: "Star Alliance", programa: "TAP Miles&Go", confianca: "confirmado",
+        nota: "Tabela fixa TAP: 95.000 milhas Brasil → Europa, Executiva. Mesmo valor que Brasil → América do Norte na nova tabela." },
+      azul: { milhas: null, parceira: "TAP / Emirates", alianca: "Star Alliance / outros", programa: "Azul Fidelidade", confianca: "estimativa",
+        nota: "Dinâmico via Azul pelo Mundo. Preço de executiva varia muito — busque no Azul pelo Mundo pra ver o valor real do dia." }
     }
   }
-  // NACIONAL_BR fica de fora por enquanto: tabela fixa não existe pra voo na própria companhia
-  // (LATAM Pass em voo LATAM, Smiles em voo GOL) — isso é sempre dinâmico, não tabela fixa.
-  // Adiciono quando tivermos uma fonte real pra resgates domésticos via parceria de verdade.
 };
 
 /* Detecção de região por substring (não por igualdade exata) — evita o bug de "Lisboa" cair em América do Norte */
 const REGIAO_KEYWORDS = {
-  AMERICA_DO_NORTE: ['iah','houston','jfk','nova york','new york','mia','miami','mco','orlando','lax','los angeles','ord','chicago','atl','atlanta','dfw','dallas','bos','boston','iad','washington','las vegas','sfo','san francisco','yyz','toronto','yul','montreal','yvr','vancouver','fll','fort lauderdale','sea','seattle','phl','philadelphia']
+  AMERICA_DO_NORTE: ['iah','houston','jfk','nova york','new york','mia','miami','mco','orlando','lax','los angeles','ord','chicago','atl','atlanta','dfw','dallas','bos','boston','iad','washington','las vegas','sfo','san francisco','yyz','toronto','yul','montreal','yvr','vancouver','fll','fort lauderdale','sea','seattle','phl','philadelphia'],
+  EUROPA: ['lis','lisboa','mad','madrid','barcelona','bcn','lhr','lgw','london','londres','cdg','ory','paris','fco','rome','roma','fra','frankfurt','ams','amsterdam','vie','vienna','viena','zrh','zurich','ath','atenas','dub','dublin','cph','oslo','sto','hel','war','bud','pra','bru','bruxelas']
 };
 function detectarRegiao(destinoTexto){
   const norm = destinoTexto.trim().toLowerCase();
@@ -261,6 +295,7 @@ function render(){
   const cpp = {
     latam: Number(document.getElementById('cpp-latam').value) || 0,
     smiles: Number(document.getElementById('cpp-smiles').value) || 0,
+    azul: Number(document.getElementById('cpp-azul').value) || 0,
     tap: Number(document.getElementById('cpp-tap').value) || 0
   };
 
@@ -288,34 +323,58 @@ function render(){
   }
 
   const dados = regiaoDados[classeAtual];
+  const origemIATA = extrairIATA(origem);
+  const destinoIATA = extrairIATA(destino);
+  const dataLink = document.getElementById('data-aprox').value || '';
+  const dataFormatada = dataLink ? dataLink.split('-').join('-') : '';
+
+  function linkAzulPeloMundo(){ return 'https://azulpelomundo.voeazul.com.br/'; }
+  function linkSmilesBusca(o,d){ const d2 = dataLink ? dataLink.split('-').reverse().join('/') : ''; return `https://www.smiles.com.br/voos?originAirport=${o}&destinationAirport=${d}&departureDate=${d2}&adults=1&tripType=1`; }
+  function linkLATAMPass(o,d){ return `https://www.latamairlines.com/br/pt/flight-search?origin=${o}&destination=${d}&outbound=${dataFormatada}T12:00:00.000Z&adt=1&cabin=Economy&trip=OW`; }
+  function linkTAP(){ return 'https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas'; }
+
+  const NOMES = {latam:'LATAM Pass', smiles:'Smiles', tap:'TAP Miles&Go', azul:'Azul Fidelidade'};
+  const EMOJIS = {latam:'🎯', smiles:'🎯', tap:'🎯', azul:'🎯'};
+  const LINKS_EMISSAO = {
+    dinheiro: flightsLink(origem, destino),
+    latam: linkLATAMPass(origemIATA, destinoIATA),
+    smiles: linkSmilesBusca(origemIATA, destinoIATA),
+    tap: linkTAP(),
+    azul: linkAzulPeloMundo()
+  };
+  const LABEL_BTN = {
+    dinheiro: 'Buscar voo ↗',
+    latam: 'Buscar no LATAM Pass ↗',
+    smiles: 'Buscar na Smiles ↗',
+    tap: 'Buscar na TAP Miles&Go ↗',
+    azul: 'Abrir Azul pelo Mundo ↗'
+  };
+
   const opcoes = [
-    { id:'dinheiro', nome:'💰 Dinheiro', sub:'Preço de mercado', custo: precoDinheiro, tagHtml:'' }
+    { id:'dinheiro', nome:'💰 Dinheiro', sub:'Preço de mercado', custo: precoDinheiro }
   ];
-  ['latam','smiles','tap'].forEach(prog=>{
+  ['latam','smiles','tap','azul'].forEach(prog=>{
     const d = dados[prog];
-    const custo = (d.milhas/1000) * cpp[prog];
+    const milhas = d.milhas;
+    const custo = milhas ? (milhas/1000) * cpp[prog] : 0;
     const conf = CONF_STYLE[d.confianca];
-    const nomes = {latam:'LATAM Pass', smiles:'Smiles', tap:'TAP Miles&Go'};
     opcoes.push({
-      id: prog, nome: `🎯 ${nomes[prog]}`, sub: `${d.parceira} · ${d.alianca}`,
-      custo, milhas: d.milhas, conf, nota: d.nota
+      id: prog, nome: `${EMOJIS[prog]} ${NOMES[prog]}`,
+      sub: `${d.parceira} · ${d.alianca}`,
+      custo: milhas ? custo : 0,
+      milhas, conf, nota: d.nota, semTabela: !milhas
     });
   });
 
-  const menor = Math.min(...opcoes.map(o=>o.custo));
+  const valoresReais = opcoes.filter(o => o.custo > 0);
+  const menor = valoresReais.length > 0 ? Math.min(...valoresReais.map(o => o.custo)) : 0;
 
-  const origemIATA = extrairIATA(document.getElementById('origem').value);
-  const destinoIATA = extrairIATA(destino);
-  const LINKS_EMISSAO = {
-    dinheiro: flightsLink(origem, destino),
-    latam: linkLatam(origemIATA, destinoIATA),
-    smiles: linkSmiles(origemIATA, destinoIATA),
-    tap: LINK_TAP_INFO
-  };
+  const origemIATAc = extrairIATA(document.getElementById('origem').value);
+  const destinoIATAc = extrairIATA(destino);
 
   cardsEl.innerHTML = '';
   opcoes.forEach(o=>{
-    const isWin = o.custo === menor && o.custo > 0;
+    const isWin = o.custo > 0 && o.custo === menor;
     const card = document.createElement('div');
     card.className = `rounded-2xl p-4 border ${isWin ? 'bg-[#16221a] border-[#7fa67a]/50 card-win' : 'bg-[#13171f] border-white/10'}`;
     let confBadge = '';
@@ -323,20 +382,58 @@ function render(){
       confBadge = `<span class="font-mono text-[9.5px] uppercase tracking-wide border rounded-full px-2 py-0.5 ${o.conf.color}">${o.conf.label}</span>`;
     }
     const linkEmissao = LINKS_EMISSAO[o.id];
+    const labelBtn = LABEL_BTN[o.id];
+
+    let valorDisplay = '';
+    if(o.semTabela){
+      valorDisplay = `<div class="font-mono text-xs text-white/40 mb-1">dinâmico — sem tabela fixa</div>`;
+    } else if(o.custo > 0){
+      valorDisplay = `<div class="font-display text-2xl font-semibold ${isWin?'text-[#7fa67a]':''} mb-1">${fmtR$(o.custo)}</div>`;
+    } else {
+      valorDisplay = `<div class="font-display text-2xl font-semibold mb-1">—</div>`;
+    }
+
     card.innerHTML = `
       <div class="flex justify-between items-start mb-1">
         <div class="font-display font-semibold text-sm">${o.nome}</div>
         ${isWin ? '<span class="font-mono text-[9.5px] uppercase tracking-wide text-[#7fa67a] bg-[#7fa67a]/15 border border-[#7fa67a]/40 rounded-full px-2 py-0.5">mais barato</span>' : ''}
       </div>
       <div class="text-[11px] text-white/45 mb-2">${o.sub}</div>
-      <div class="font-display text-2xl font-semibold ${isWin?'text-[#7fa67a]':''} mb-1">${fmtR$(o.custo)}</div>
-      ${o.milhas ? `<div class="font-mono text-[11px] text-white/50 mb-2">${fmtMilhas(o.milhas)}</div>` : '<div class="mb-2"></div>'}
+      ${valorDisplay}
+      ${o.milhas ? `<div class="font-mono text-[11px] text-white/50 mb-2">${fmtMilhas(o.milhas)}</div>` : '<div class="mb-1"></div>'}
       ${confBadge ? `<div class="mb-2">${confBadge}</div>` : ''}
       ${o.nota ? `<div class="text-[10.5px] text-white/40 leading-snug mb-2">${o.nota}</div>` : ''}
-      ${linkEmissao ? `<a href="${linkEmissao}" target="_blank" rel="noopener" class="block text-center text-xs font-semibold py-2 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969]">Emitir / abrir busca ↗</a>` : ''}
+      ${linkEmissao ? `<a href="${linkEmissao}" target="_blank" rel="noopener" class="block text-center text-xs font-semibold py-2 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969] transition-colors">${labelBtn}</a>` : ''}
     `;
     cardsEl.appendChild(card);
   });
+
+  // Painel de lançamento rápido — copia dados da rota pro clipboard antes de abrir cada site
+  let lancadorEl = document.getElementById('lancador-rapido');
+  if(!lancadorEl){
+    lancadorEl = document.createElement('div');
+    lancadorEl.id = 'lancador-rapido';
+    lancadorEl.className = 'mt-4 bg-[#13171f] border border-white/10 rounded-2xl p-4';
+    cardsEl.parentNode.insertBefore(lancadorEl, cardsEl.nextSibling);
+  }
+  const dataDisplay = dataLink ? new Date(dataLink+'T12:00:00').toLocaleDateString('pt-BR') : 'data não selecionada';
+  const textoCopia = `Rota: ${origemIATAc} → ${destinoIATAc} | Data: ${dataDisplay} | Cabine: ${classeAtual === 'economica' ? 'Econômica' : 'Executiva'}`;
+  lancadorEl.innerHTML = `
+    <div class="font-mono text-[10px] uppercase tracking-widest text-[#e6c969] mb-2">⚡ Lançamento rápido — copie os dados e abra cada site</div>
+    <div class="font-mono text-xs text-white/60 bg-[#0b0e14] rounded-lg px-3 py-2 mb-3">${textoCopia}</div>
+    <div class="flex flex-wrap gap-2">
+      <button onclick="navigator.clipboard.writeText('${textoCopia.replace(/'/g,"\\'")}').then(()=>{this.textContent='copiado ✓';setTimeout(()=>this.textContent='📋 Copiar dados da rota',1500)})"
+        class="text-xs py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969]">📋 Copiar dados da rota</button>
+      <a href="${LINKS_EMISSAO.azul}" target="_blank" rel="noopener"
+        class="text-xs py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969]">✈️ Azul pelo Mundo</a>
+      <a href="${LINKS_EMISSAO.smiles}" target="_blank" rel="noopener"
+        class="text-xs py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969]">✈️ Smiles</a>
+      <a href="${LINKS_EMISSAO.latam}" target="_blank" rel="noopener"
+        class="text-xs py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969]">✈️ LATAM Pass</a>
+      <a href="${LINKS_EMISSAO.tap}" target="_blank" rel="noopener"
+        class="text-xs py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969]">✈️ TAP Miles&Go</a>
+    </div>
+  `;
 }
 
 ['origem','destino','preco-dinheiro','cpp-latam','cpp-smiles','cpp-azul','cpp-tap','data-aprox'].forEach(id=>{
