@@ -3,544 +3,270 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MilhaCerta — Dashboard Caseiro</title>
+<title>MilhaCerta</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  body{font-family:'Inter',sans-serif;}
-  .font-display{font-family:'Fraunces',serif;}
-  .font-mono{font-family:'IBM Plex Mono',monospace;}
-  .card-win{box-shadow:0 0 0 2px #7fa67a, 0 12px 30px -10px rgba(127,166,122,.35);}
+  body { font-family: 'Inter', sans-serif; background: #0b0e14; color: #f3eee2; }
+  input, select { background: #0b0e14; border: 1px solid rgba(255,255,255,0.15); color: #f3eee2; border-radius: 8px; padding: 10px 12px; width: 100%; font-size: 14px; }
+  input:focus, select:focus { outline: 2px solid #e6c969; outline-offset: 1px; }
+  .launch-btn { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #13171f; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; text-decoration: none; color: #f3eee2; transition: border-color 0.15s; }
+  .launch-btn:hover { border-color: rgba(230,201,105,0.5); }
+  .icon-box { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
 </style>
 </head>
-<body class="bg-[#0b0e14] text-[#f3eee2] min-h-screen">
-<div class="max-w-6xl mx-auto px-5 py-8 md:py-12">
+<body class="min-h-screen p-5 md:p-8">
+<div class="max-w-5xl mx-auto">
 
-  <!-- HEADER -->
   <header class="mb-8 border-b border-white/10 pb-6">
-    <div class="flex items-center gap-2 mb-2">
-      <svg width="22" height="22" viewBox="0 0 30 30"><path d="M15 2 L18 13 L28 16 L18 18 L15 28 L12 18 L2 16 L12 13 Z" fill="#c9a227"/></svg>
-      <span class="font-display font-semibold text-lg">MilhaCerta</span>
-      <span class="font-mono text-[10px] uppercase tracking-widest text-[#7fa67a] bg-[#7fa67a]/10 border border-[#7fa67a]/30 rounded-full px-2 py-0.5 ml-1">dashboard caseiro</span>
+    <div class="flex items-center gap-2 mb-1">
+      <svg width="20" height="20" viewBox="0 0 30 30"><path d="M15 2 L18 13 L28 16 L18 18 L15 28 L12 18 L2 16 L12 13 Z" fill="#c9a227"/></svg>
+      <span style="font-size:18px;font-weight:600">MilhaCerta</span>
     </div>
-    <h1 class="font-display text-2xl md:text-3xl font-semibold">Painel pessoal de análise de passagens</h1>
-    <p class="text-white/50 text-sm mt-1 max-w-xl">Roda 100% aqui no navegador — nada é instalado, nada sai do seu computador.</p>
+    <p style="color:rgba(243,238,226,0.5);font-size:13px">Pesquise a rota e abra todos os sites de uma vez — dinheiro e milhas comparados na hora.</p>
   </header>
 
-  <div class="grid md:grid-cols-[340px_1fr] gap-6">
+  <div class="grid md:grid-cols-2 gap-6">
 
-    <!-- INPUTS -->
-    <div class="bg-[#13171f] border border-white/10 rounded-2xl p-5 h-fit">
-      <h2 class="font-display text-base font-semibold mb-4">Sua busca</h2>
+    <!-- BUSCA -->
+    <div style="background:#13171f;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px">
+      <h2 style="font-size:15px;font-weight:600;margin-bottom:16px">Sua busca</h2>
 
-      <label class="block text-[11px] font-mono uppercase tracking-wide text-white/50 mb-1">Origem</label>
-      <div class="relative mb-3">
-        <input id="origem" value="GRU" autocomplete="off" class="w-full bg-[#0b0e14] border border-white/15 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#e6c969]">
-        <div id="sug-origem" class="hidden absolute z-20 left-0 right-0 mt-1 bg-[#13171f] border border-white/15 rounded-lg shadow-2xl max-h-56 overflow-y-auto text-xs"></div>
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div>
+          <label style="font-size:11px;color:rgba(243,238,226,0.5);display:block;margin-bottom:5px">ORIGEM</label>
+          <input id="orig" value="GYN" style="text-transform:uppercase">
+        </div>
+        <div>
+          <label style="font-size:11px;color:rgba(243,238,226,0.5);display:block;margin-bottom:5px">DESTINO</label>
+          <input id="dest" value="IAH" style="text-transform:uppercase">
+        </div>
       </div>
 
-      <label class="block text-[11px] font-mono uppercase tracking-wide text-white/50 mb-1">Destino</label>
-      <div class="relative mb-3">
-        <input id="destino" value="IAH - Houston" autocomplete="off" class="w-full bg-[#0b0e14] border border-white/15 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#e6c969]">
-        <div id="sug-destino" class="hidden absolute z-20 left-0 right-0 mt-1 bg-[#13171f] border border-white/15 rounded-lg shadow-2xl max-h-56 overflow-y-auto text-xs"></div>
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div>
+          <label style="font-size:11px;color:rgba(243,238,226,0.5);display:block;margin-bottom:5px">DATA DE IDA</label>
+          <input id="data" type="date">
+        </div>
+        <div>
+          <label style="font-size:11px;color:rgba(243,238,226,0.5);display:block;margin-bottom:5px">CABINE</label>
+          <select id="cabine">
+            <option value="economy">Econômica</option>
+            <option value="business">Executiva</option>
+            <option value="first">Primeira classe</option>
+          </select>
+        </div>
       </div>
 
-      <label class="block text-[11px] font-mono uppercase tracking-wide text-white/50 mb-1">Data aproximada (só pra abrir nos sites)</label>
-      <input id="data-aprox" type="date" class="w-full bg-[#0b0e14] border border-white/15 rounded-lg px-3 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-[#e6c969]">
+      <button onclick="buscar()" style="width:100%;background:#c9a227;color:#0b0e14;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:16px">
+        Buscar →
+      </button>
 
-      <label class="block text-[11px] font-mono uppercase tracking-wide text-white/50 mb-1">Classe</label>
-      <div class="flex gap-2 mb-3">
-        <button id="btn-economica" class="flex-1 py-2 rounded-lg text-sm font-semibold bg-[#c9a227] text-[#0b0e14]">Econômica</button>
-        <button id="btn-executiva" class="flex-1 py-2 rounded-lg text-sm font-semibold bg-[#0b0e14] border border-white/15 text-white/60">Executiva</button>
-      </div>
-
-      <label class="block text-[11px] font-mono uppercase tracking-wide text-white/50 mb-1">Preço em dinheiro encontrado (R$)</label>
-      <input id="preco-dinheiro" type="number" value="4200" class="w-full bg-[#0b0e14] border border-white/15 rounded-lg px-3 py-2.5 text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-[#e6c969]">
-      <button id="btn-buscar-real" type="button" class="w-full text-xs font-semibold py-2 rounded-lg bg-[#0b0e14] border border-[#e6c969]/40 text-[#e6c969] hover:border-[#e6c969] mb-1">🔎 Buscar preço real (Duffel)</button>
-      <p class="text-[10px] text-[#e07a5f] mb-1">⚠️ Backend ainda em modo de teste — preços fictícios até trocarmos pro token live.</p>
-      <p id="status-busca-real" class="text-[10.5px] text-white/35 mb-4 leading-snug min-h-[2.6em]">Cola a URL do seu backend abaixo pra ativar.</p>
-
-      <details class="mb-4">
-        <summary class="text-[11px] font-mono uppercase tracking-wide text-white/40 cursor-pointer">Configurar backend ▾</summary>
-        <label class="block text-[10px] text-white/40 mt-2 mb-1">URL da sua function (Vercel)</label>
-        <input id="endpoint-url" placeholder="https://seu-projeto.vercel.app/api/search" class="w-full bg-[#0b0e14] border border-white/15 rounded-md px-2 py-1.5 text-xs mb-2">
-        <button id="btn-salvar-endpoint" type="button" class="text-xs text-[#7fa67a]">Salvar endpoint</button>
-        <span id="endpoint-salvo-msg" class="text-[10px] text-[#7fa67a] ml-2 opacity-0 transition-opacity">salvo ✓</span>
-      </details>
-
-      <h3 class="font-mono text-[11px] uppercase tracking-wide text-white/50 mb-2 pt-2 border-t border-white/10">Seu custo do milheiro (R$/1.000)</h3>
-      <p class="text-[10.5px] text-white/35 mb-2 leading-snug">Esses valores são os SEUS — o que você realmente paga. Editáveis.</p>
-      <div class="grid grid-cols-2 gap-2">
-        <div><label class="text-[10px] text-white/40 block mb-0.5">LATAM Pass</label><input id="cpp-latam" type="number" value="25" class="w-full bg-[#0b0e14] border border-white/15 rounded-md px-2 py-1.5 text-sm"></div>
-        <div><label class="text-[10px] text-white/40 block mb-0.5">Smiles</label><input id="cpp-smiles" type="number" value="17" class="w-full bg-[#0b0e14] border border-white/15 rounded-md px-2 py-1.5 text-sm"></div>
-        <div><label class="text-[10px] text-white/40 block mb-0.5">Azul Fidelidade</label><input id="cpp-azul" type="number" value="15" class="w-full bg-[#0b0e14] border border-white/15 rounded-md px-2 py-1.5 text-sm"></div>
-        <div><label class="text-[10px] text-white/40 block mb-0.5">TAP</label><input id="cpp-tap" type="number" value="35" class="w-full bg-[#0b0e14] border border-white/15 rounded-md px-2 py-1.5 text-sm"></div>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:14px">
+        <h3 style="font-size:11px;color:rgba(243,238,226,0.5);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em">Seu custo do milheiro (R$/1.000)</h3>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label style="font-size:10px;color:rgba(243,238,226,0.4);display:block;margin-bottom:4px">LATAM Pass</label>
+            <input id="cpp-latam" type="number" value="25" oninput="calcular()">
+          </div>
+          <div>
+            <label style="font-size:10px;color:rgba(243,238,226,0.4);display:block;margin-bottom:4px">Smiles</label>
+            <input id="cpp-smiles" type="number" value="17" oninput="calcular()">
+          </div>
+          <div>
+            <label style="font-size:10px;color:rgba(243,238,226,0.4);display:block;margin-bottom:4px">Azul Fidelidade</label>
+            <input id="cpp-azul" type="number" value="15" oninput="calcular()">
+          </div>
+          <div>
+            <label style="font-size:10px;color:rgba(243,238,226,0.4);display:block;margin-bottom:4px">TAP Miles&Go</label>
+            <input id="cpp-tap" type="number" value="35" oninput="calcular()">
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- RESULTS -->
+    <!-- RESULTADOS -->
     <div>
-      <!-- RAIO-X -->
-      <div id="raio-x" class="hidden mb-5 bg-[#1d2306] border border-[#c9a227]/40 rounded-2xl p-5">
-        <div class="font-mono text-[10px] uppercase tracking-widest text-[#e6c969] mb-2">📡 Raio-X da rota</div>
-        <h3 class="font-display text-lg font-semibold mb-2" id="raio-x-titulo"></h3>
-        <ul id="raio-x-lista" class="text-sm text-white/80 space-y-1.5 list-disc pl-4"></ul>
+
+      <!-- Calculadora -->
+      <div style="background:#13171f;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px;margin-bottom:14px">
+        <h2 style="font-size:15px;font-weight:600;margin-bottom:4px">Calculadora</h2>
+        <p style="font-size:12px;color:rgba(243,238,226,0.4);margin-bottom:14px">Digite o preço em dinheiro e as milhas necessárias para ver quem ganha.</p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label style="font-size:10px;color:rgba(243,238,226,0.5);display:block;margin-bottom:4px">PREÇO EM DINHEIRO (R$)</label>
+            <input id="preco-din" type="number" placeholder="Ex: 4200" oninput="calcular()">
+          </div>
+          <div>
+            <label style="font-size:10px;color:rgba(243,238,226,0.5);display:block;margin-bottom:4px">MILHAS NECESSÁRIAS</label>
+            <input id="milhas-qtd" type="number" placeholder="Ex: 57000" oninput="calcular()">
+          </div>
+        </div>
+        <div id="calc-result" style="background:#0b0e14;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px;font-size:13px;color:rgba(243,238,226,0.5)">
+          Preencha os campos para ver a comparação.
+        </div>
       </div>
 
-      <div class="flex items-center justify-between flex-wrap gap-2 mb-1">
-        <h2 class="font-display text-lg font-semibold" id="route-label">GRU → IAH - Houston</h2>
-        <span id="badge-regiao" class="font-mono text-[10px] uppercase tracking-wide bg-[#13171f] border border-white/15 text-white/50 rounded-full px-2.5 py-1"></span>
+      <!-- Rota copiável -->
+      <div id="rota-box" style="display:none;background:#13171f;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px;margin-bottom:14px">
+        <h2 style="font-size:15px;font-weight:600;margin-bottom:10px">Dados da rota</h2>
+        <div style="display:flex;align-items:center;gap:8px;background:#0b0e14;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;margin-bottom:12px">
+          <span id="rota-texto" style="flex:1;font-size:12px;color:rgba(243,238,226,0.7);font-family:monospace"></span>
+          <button id="copy-btn" onclick="copiar()" style="font-size:11px;padding:4px 10px;border:1px solid rgba(255,255,255,0.2);border-radius:6px;background:transparent;color:rgba(243,238,226,0.6);cursor:pointer;white-space:nowrap">Copiar</button>
+        </div>
+        <button onclick="abrirTodos()" style="width:100%;padding:10px;border:1px solid rgba(255,255,255,0.2);border-radius:10px;background:transparent;color:#f3eee2;cursor:pointer;font-size:13px">
+          ↗ Abrir todos os sites de uma vez
+        </button>
       </div>
-      <p class="text-white/40 text-xs font-mono mb-3">Comparativo instantâneo — cartão com fundo verde é o mais barato agora</p>
 
-      <div id="insight-regiao" class="hidden mb-4 bg-[#13171f] border border-white/10 rounded-2xl p-4 text-sm text-white/70 leading-relaxed"></div>
-
-      <div id="cards" class="grid sm:grid-cols-2 gap-4"></div>
-
-      <div class="mt-6 bg-[#13171f] border border-white/10 rounded-2xl p-4 text-xs text-white/45 leading-relaxed">
-        <strong class="text-white/70">Sobre os dados:</strong> os valores de tabela fixa abaixo foram checados manualmente em jun/2026 e mudam com frequência — programas de milhas reajustam essas tabelas a cada poucos meses. As tags <span class="text-[#7fa67a]">confirmado</span>, <span class="text-[#e6c969]">estimativa</span> e <span class="text-[#e07a5f]">confira antes</span> indicam meu nível de confiança em cada número, não uma garantia de preço.
-      </div>
     </div>
   </div>
+
+  <!-- LINKS -->
+  <div id="links-box" style="display:none;margin-top:20px">
+    <h2 style="font-size:15px;font-weight:600;margin-bottom:14px">Abrir na busca certa</h2>
+    <div class="grid md:grid-cols-2 gap-3">
+
+      <a id="link-gflights" href="#" target="_blank" class="launch-btn">
+        <div class="icon-box" style="background:#1a2744">🔍</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">Google Flights</div>
+          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Dinheiro — rota pré-preenchida</div>
+        </div>
+      </a>
+
+      <a id="link-seats" href="#" target="_blank" class="launch-btn">
+        <div class="icon-box" style="background:#0d2a1f">✈</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">Seats.aero</div>
+          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Disponibilidade de milhas (Pro)</div>
+        </div>
+      </a>
+
+      <a href="https://www.smiles.com.br/passagens" target="_blank" class="launch-btn">
+        <div class="icon-box" style="background:#2a1a00">🟠</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">Smiles</div>
+          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Milhas GOL / American / parceiras</div>
+        </div>
+      </a>
+
+      <a href="https://www.latamairlines.com/br/pt/use-suas-milhas" target="_blank" class="launch-btn">
+        <div class="icon-box" style="background:#2a0a12">🔴</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">LATAM Pass</div>
+          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Milhas LATAM / Delta / Qatar — tabela fixa</div>
+        </div>
+      </a>
+
+      <a href="https://azulpelomundo.voeazul.com.br" target="_blank" class="launch-btn">
+        <div class="icon-box" style="background:#0a1a2a">🔵</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">Azul pelo Mundo</div>
+          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Pontos Azul / United / TAP / Turkish</div>
+        </div>
+      </a>
+
+      <a href="https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas" target="_blank" class="launch-btn">
+        <div class="icon-box" style="background:#0a2a12">🟢</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">TAP Miles&Go</div>
+          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Star Alliance — tabela fixa confirmada</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <footer style="margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);font-size:11px;color:rgba(243,238,226,0.3);line-height:1.6">
+    Uso pessoal. Valores de milhas mudam com frequência — confirme sempre no site oficial antes de comprar ou transferir milhas.
+  </footer>
+
 </div>
 
 <script>
-/* Aeroportos pra autocomplete local — código, cidade, nome (dados factuais, baixo risco de erro) */
-const DATABASE_AEROPORTOS = [
-  { iata:'GRU', cidade:'São Paulo', nome:'Guarulhos Intl', kw:'sao paulo guarulhos gru sp' },
-  { iata:'CGH', cidade:'São Paulo', nome:'Congonhas', kw:'sao paulo congonhas cgh sp' },
-  { iata:'VCP', cidade:'Campinas', nome:'Viracopos', kw:'campinas viracopos vcp sp' },
-  { iata:'SDU', cidade:'Rio de Janeiro', nome:'Santos Dumont', kw:'rio de janeiro santos dumont sdu rj' },
-  { iata:'GIG', cidade:'Rio de Janeiro', nome:'Galeão Intl', kw:'rio de janeiro galeao gig rj' },
-  { iata:'CNF', cidade:'Belo Horizonte', nome:'Confins', kw:'belo horizonte confins cnf mg bh' },
-  { iata:'GYN', cidade:'Goiânia', nome:'Santa Genoveva', kw:'goiania santa genoveva gyn go' },
-  { iata:'BSB', cidade:'Brasília', nome:'Juscelino Kubitschek', kw:'brasilia bsb df' },
-  { iata:'REC', cidade:'Recife', nome:'Guararapes', kw:'recife guararapes rec pe' },
-  { iata:'FOR', cidade:'Fortaleza', nome:'Pinto Martins', kw:'fortaleza pinto martins for ce' },
-  { iata:'IAH', cidade:'Houston', nome:'George Bush Intl', kw:'houston iah texas eua usa' },
-  { iata:'MIA', cidade:'Miami', nome:'Miami Intl', kw:'miami mia florida eua usa' },
-  { iata:'MCO', cidade:'Orlando', nome:'Orlando Intl', kw:'orlando mco florida eua usa disney' },
-  { iata:'JFK', cidade:'Nova York', nome:'John F. Kennedy', kw:'nova york new york jfk ny eua usa' },
-  { iata:'EWR', cidade:'Newark', nome:'Newark Liberty', kw:'newark nova york new york ewr nj eua usa' },
-  { iata:'LIS', cidade:'Lisboa', nome:'Humberto Delgado', kw:'lisboa lis portugal europa' },
-  { iata:'MAD', cidade:'Madrid', nome:'Barajas', kw:'madrid mad espanha europa' },
-  { iata:'EZE', cidade:'Buenos Aires', nome:'Ezeiza', kw:'buenos aires ezeiza eze argentina' },
-  { iata:'SCL', cidade:'Santiago', nome:'Arturo Merino Benítez', kw:'santiago scl chile' },
-  { iata:'DOH', cidade:'Doha', nome:'Hamad Intl', kw:'doha qatar doh oriente medio' }
-];
-function normalizarBusca(t){ return t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); }
-function montarAutocomplete(idInput, idSugestoes){
-  const input = document.getElementById(idInput);
-  const sug = document.getElementById(idSugestoes);
-  input.addEventListener('input', ()=>{
-    const q = normalizarBusca(input.value);
-    if(q.length < 1){ sug.classList.add('hidden'); return; }
-    const resultados = DATABASE_AEROPORTOS.filter(a => a.iata.toLowerCase().includes(q) || a.kw.includes(q));
-    if(resultados.length === 0){ sug.classList.add('hidden'); return; }
-    sug.innerHTML = '';
-    resultados.slice(0,8).forEach(a=>{
-      const item = document.createElement('div');
-      item.className = 'px-3 py-2 hover:bg-white/10 cursor-pointer border-b border-white/5 last:border-0 flex justify-between';
-      item.innerHTML = `<span>${a.cidade} <span class="text-white/40">— ${a.nome}</span></span><span class="font-mono text-[#e6c969]">${a.iata}</span>`;
-      item.addEventListener('click', ()=>{
-        input.value = `${a.iata} - ${a.cidade}`;
-        sug.classList.add('hidden');
-        render();
+function fmt(n){return'R$ '+Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+function buscar(){
+  const orig=(document.getElementById('orig').value||'GYN').toUpperCase().trim();
+  const dest=(document.getElementById('dest').value||'IAH').toUpperCase().trim();
+  const data=document.getElementById('data').value;
+  const cabine=document.getElementById('cabine').value;
+  const cabineLabel={economy:'Econômica',business:'Executiva',first:'Primeira classe'}[cabine];
+  const dataFmt=data?new Date(data+'T12:00:00').toLocaleDateString('pt-BR'):'data não selecionada';
+
+  document.getElementById('rota-texto').textContent=`${orig} → ${dest}  ·  ${dataFmt}  ·  ${cabineLabel}`;
+
+  const gfUrl=data
+    ?`https://www.google.com/travel/flights#flt=${orig}.${dest}.${data};c:BRL;e:1;sd:1;t:f`
+    :`https://www.google.com/travel/flights?q=voos+de+${orig}+para+${dest}&curr=BRL`;
+  document.getElementById('link-gflights').href=gfUrl;
+  document.getElementById('link-seats').href=`https://seats.aero/search?origin_airport=${orig}&destination_airport=${dest}`;
+
+  document.getElementById('rota-box').style.display='block';
+  document.getElementById('links-box').style.display='block';
+  document.getElementById('links-box').scrollIntoView({behavior:'smooth',block:'start'});
+  calcular();
+}
+
+function abrirTodos(){
+  [
+    document.getElementById('link-gflights').href,
+    document.getElementById('link-seats').href,
+    'https://www.smiles.com.br/passagens',
+    'https://www.latamairlines.com/br/pt/use-suas-milhas',
+    'https://azulpelomundo.voeazul.com.br',
+    'https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas'
+  ].forEach(u=>window.open(u,'_blank'));
+}
+
+function copiar(){
+  const txt=document.getElementById('rota-texto').textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b=document.getElementById('copy-btn');
+    b.textContent='Copiado ✓';
+    setTimeout(()=>b.textContent='Copiar',1500);
+  }).catch(()=>{});
+}
+
+function calcular(){
+  const din=parseFloat(document.getElementById('preco-din').value)||0;
+  const milhas=parseFloat(document.getElementById('milhas-qtd').value)||0;
+  const cpps={latam:parseFloat(document.getElementById('cpp-latam').value)||0,smiles:parseFloat(document.getElementById('cpp-smiles').value)||0,azul:parseFloat(document.getElementById('cpp-azul').value)||0,tap:parseFloat(document.getElementById('cpp-tap').value)||0};
+  const nomes={latam:'LATAM Pass',smiles:'Smiles',azul:'Azul Fidelidade',tap:'TAP Miles&Go'};
+  const el=document.getElementById('calc-result');
+  if(!din&&!milhas){el.innerHTML='<span style="color:rgba(243,238,226,0.4)">Preencha os campos para ver a comparação.</span>';return;}
+  let html='';
+  if(din>0)html+=`<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.08)"><span style="color:rgba(243,238,226,0.5);font-size:11px">DINHEIRO</span><br><strong style="font-size:18px">${fmt(din)}</strong></div>`;
+  if(milhas>0){
+    const custos=Object.keys(cpps).filter(p=>cpps[p]>0).map(p=>({p,v:(milhas/1000)*cpps[p]})).sort((a,b)=>a.v-b.v);
+    if(custos.length>0){
+      html+=`<div style="font-size:11px;color:rgba(243,238,226,0.5);margin-bottom:8px">${Number(milhas).toLocaleString('pt-BR')} MILHAS EM CADA PROGRAMA</div>`;
+      custos.forEach((c,i)=>{
+        const melhor=i===0;
+        const cor=melhor&&din>0&&c.v<din?'#7fa67a':melhor?'#e6c969':'rgba(243,238,226,0.8)';
+        const tag=melhor&&din>0&&c.v<din?' ✓ mais barato':melhor&&din===0?' ✓ melhor opção':'';
+        html+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:12px;color:rgba(243,238,226,0.6)">${nomes[c.p]}</span>
+          <span style="font-size:14px;font-weight:600;color:${cor}">${fmt(c.v)}${tag}</span>
+        </div>`;
       });
-      sug.appendChild(item);
-    });
-    sug.classList.remove('hidden');
-  });
-  document.addEventListener('click', (e)=>{ if(e.target !== input) sug.classList.add('hidden'); });
-}
-
-/* Links de emissão — AVISO: formato de URL de cada companhia muda sem aviso; testar antes de confiar.
-   TAP não tem busca direta pra reservas em parceira (United/Copa) — manda pra página oficial de regras. */
-function dataParaLink(){
-  const v = document.getElementById('data-aprox').value;
-  return v || '';
-}
-function linkLatam(origem, destino){
-  const d = dataParaLink();
-  if(!d) return 'https://www.latamairlines.com/br/pt';
-  return `https://www.latamairlines.com/br/pt/flight-search?origin=${origem}&destination=${destino}&outbound=${d}T12:00:00.000Z&adt=1&chd=0&inf=0&cabin=Economy&trip=OW`;
-}
-function linkSmiles(origem, destino){
-  const d = dataParaLink();
-  if(!d) return 'https://www.smiles.com.br/voos';
-  const [ano,mes,dia] = d.split('-');
-  return `https://www.smiles.com.br/voos/resultado?originAirport=${origem}&destinationAirport=${destino}&dataIda=${dia}%2F${mes}%2F${ano}&adults=1&tripType=1&cabinType=all`;
-}
-function flightsLink(origem, destino){
-  const q = encodeURIComponent(`voos de ${origem} para ${destino}`);
-  return `https://www.google.com/travel/flights?q=${q}`;
-}
-const LINK_TAP_INFO = 'https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas';
-
-const TABELA_POR_REGIAO = {
-  AMERICA_DO_NORTE: {
-    label: "Brasil → América do Norte",
-    insight: `<strong>Sweet spots confirmados:</strong>
-      <br>• <strong>LATAM Pass → Delta</strong>: tabela fixa, 57k eco / 135k executiva. Emitir só por telefone/WhatsApp LATAM.
-      <br>• <strong>Smiles → GOL ou American</strong>: dinâmico. GRU-MIA direto (GOL) a partir de 50k eco. Varia por data.
-      <br>• <strong>TAP Miles&Go → United/Copa</strong>: tabela fixa confirmada, 95k executiva Brasil-EUA (após reajuste 2025). Eco: confira no site TAP.
-      <br>• <strong>Azul Fidelidade → United/Copa/Turkish</strong>: dinâmico via Azul pelo Mundo. GRU-IAH executiva ~149k pontos. Sem tabela fixa.`,
-    economica: {
-      latam: { milhas: 57000, parceira: "Delta Air Lines", alianca: "SkyTeam", programa: "LATAM Pass", confianca: "confirmado",
-        nota: "Tabela fixa LATAM Pass, Brasil → América do Norte, Econômica. Emissão só por telefone/WhatsApp LATAM Pass." },
-      smiles: { milhas: 50000, parceira: "GOL / American Airlines", alianca: "SkyTeam / oneworld", programa: "Smiles", confianca: "estimativa",
-        nota: "Dinâmico. GRU-MIA direto (GOL) a partir de 50k — varia por data e disponibilidade. Verifique no site Smiles antes de comprar milhas." },
-      tap: { milhas: null, parceira: "United / Copa Airlines", alianca: "Star Alliance", programa: "TAP Miles&Go", confianca: "confira",
-        nota: "Tabela fixa TAP: valor de econômica varia por trecho — confira no site TAP Miles&Go. Executiva é 95k confirmado." },
-      azul: { milhas: null, parceira: "United / Copa / Turkish", alianca: "Star Alliance / SkyTeam", programa: "Azul Fidelidade", confianca: "estimativa",
-        nota: "Sem tabela fixa. Preço dinâmico via Azul pelo Mundo. Busque disponibilidade direto no site antes de avaliar." }
-    },
-    executiva: {
-      latam: { milhas: 135000, parceira: "Delta Air Lines", alianca: "SkyTeam", programa: "LATAM Pass", confianca: "confirmado",
-        nota: "Tabela fixa LATAM Pass confirmada: 135.000 milhas (não 108.000 — o valor aumentou). Emissão só por telefone/WhatsApp." },
-      smiles: { milhas: 120000, parceira: "American Airlines", alianca: "oneworld", programa: "Smiles", confianca: "estimativa",
-        nota: "Dinâmico. Valor estimado, varia bastante por rota e disponibilidade. Verifique no site Smiles antes de comprar milhas." },
-      tap: { milhas: 95000, parceira: "United / Copa Airlines", alianca: "Star Alliance", programa: "TAP Miles&Go", confianca: "confirmado",
-        nota: "Tabela fixa TAP Miles&Go confirmada: 95.000 milhas, Brasil → América do Norte, Executiva (nova tabela vigente desde 2025)." },
-      azul: { milhas: 149000, parceira: "United Airlines", alianca: "Star Alliance", programa: "Azul Fidelidade", confianca: "estimativa",
-        nota: "Dinâmico via Azul pelo Mundo. GRU-IAH executiva ~149.000 pontos (referência, pode variar). Busque no Azul pelo Mundo pra ver preço real do dia." }
-    }
-  },
-  EUROPA: {
-    label: "Brasil → Europa",
-    insight: `<strong>Sweet spots confirmados:</strong>
-      <br>• <strong>LATAM Pass → Iberia</strong>: tabela fixa oneworld. Executiva: 135k (mesmo valor da América do Norte).
-      <br>• <strong>Smiles → TAP ou Air France-KLM</strong>: dinâmico. GRU-LIS executiva a partir de 90k — varia muito.
-      <br>• <strong>TAP Miles&Go → voos TAP</strong>: tabela fixa. Brasil-Europa executiva: 95k (mesmo trecho da América do Norte).
-      <br>• <strong>Azul Fidelidade → TAP / Emirates / Air Europa</strong>: dinâmico via Azul pelo Mundo. GRU-LIS eco a partir de ~82k pontos (Royal Air Maroc, exemplo real).`,
-    economica: {
-      latam: { milhas: null, parceira: "Iberia", alianca: "oneworld", programa: "LATAM Pass", confianca: "confira",
-        nota: "Tabela fixa LATAM Pass para Europa — valor de econômica não confirmado recentemente. Confira na página oficial LATAM Pass." },
-      smiles: { milhas: 90000, parceira: "TAP / Air France-KLM", alianca: "Star Alliance / SkyTeam", programa: "Smiles", confianca: "estimativa",
-        nota: "Dinâmico. GRU-LIS executiva a partir de 90k milhas Smiles (fonte: análise março/2026). Econômica é menos — verifique no site." },
-      tap: { milhas: null, parceira: "Voos TAP", alianca: "Star Alliance", programa: "TAP Miles&Go", confianca: "confira",
-        nota: "Tabela fixa TAP para voos próprios. Valor de econômica: confirme no site TAP Miles&Go pois varia por zona tarifária." },
-      azul: { milhas: 82000, parceira: "TAP / Emirates / Air Europa", alianca: "Star Alliance / outros", programa: "Azul Fidelidade", confianca: "estimativa",
-        nota: "Dinâmico. Exemplo real: GRU-LIS eco ~82k pontos (Royal Air Maroc, via Azul pelo Mundo). Preço varia por data e companhia." }
-    },
-    executiva: {
-      latam: { milhas: 135000, parceira: "Iberia", alianca: "oneworld", programa: "LATAM Pass", confianca: "confira",
-        nota: "Tabela fixa LATAM Pass. Valor indicativo baseado na faixa oneworld — confirme no site oficial antes de comprar milhas." },
-      smiles: { milhas: 90000, parceira: "TAP / Air France-KLM", alianca: "Star Alliance / SkyTeam", programa: "Smiles", confianca: "estimativa",
-        nota: "Dinâmico. GRU-LIS executiva a partir de 90k Smiles (fonte: março/2026). Varia bastante por rota e disponibilidade." },
-      tap: { milhas: 95000, parceira: "Voos TAP", alianca: "Star Alliance", programa: "TAP Miles&Go", confianca: "confirmado",
-        nota: "Tabela fixa TAP: 95.000 milhas Brasil → Europa, Executiva. Mesmo valor que Brasil → América do Norte na nova tabela." },
-      azul: { milhas: null, parceira: "TAP / Emirates", alianca: "Star Alliance / outros", programa: "Azul Fidelidade", confianca: "estimativa",
-        nota: "Dinâmico via Azul pelo Mundo. Preço de executiva varia muito — busque no Azul pelo Mundo pra ver o valor real do dia." }
+      if(din>0&&custos[0].v<din){
+        const eco=din-custos[0].v;
+        html+=`<div style="margin-top:10px;padding:10px;background:rgba(127,166,122,0.12);border:1px solid rgba(127,166,122,0.3);border-radius:8px;font-size:12px;color:#7fa67a">Economia usando ${nomes[custos[0].p]}: <strong>${fmt(eco)}</strong></div>`;
+      }else if(din>0){
+        html+=`<div style="margin-top:10px;padding:10px;background:rgba(255,255,255,0.05);border-radius:8px;font-size:12px;color:rgba(243,238,226,0.5)">Com essas milhas, pagar em dinheiro sai mais barato.</div>`;
+      }
     }
   }
-};
-
-/* Detecção de região por substring (não por igualdade exata) — evita o bug de "Lisboa" cair em América do Norte */
-const REGIAO_KEYWORDS = {
-  AMERICA_DO_NORTE: ['iah','houston','jfk','nova york','new york','mia','miami','mco','orlando','lax','los angeles','ord','chicago','atl','atlanta','dfw','dallas','bos','boston','iad','washington','las vegas','sfo','san francisco','yyz','toronto','yul','montreal','yvr','vancouver','fll','fort lauderdale','sea','seattle','phl','philadelphia'],
-  EUROPA: ['lis','lisboa','mad','madrid','barcelona','bcn','lhr','lgw','london','londres','cdg','ory','paris','fco','rome','roma','fra','frankfurt','ams','amsterdam','vie','vienna','viena','zrh','zurich','ath','atenas','dub','dublin','cph','oslo','sto','hel','war','bud','pra','bru','bruxelas']
-};
-function detectarRegiao(destinoTexto){
-  const norm = destinoTexto.trim().toLowerCase();
-  for(const regiao in REGIAO_KEYWORDS){
-    if(REGIAO_KEYWORDS[regiao].some(k => norm.includes(k))) return regiao;
-  }
-  return null; // não reconhecido — não chuta região
+  el.innerHTML=html;
 }
 
-const CONF_STYLE = {
-  confirmado: { label: "confirmado", color: "text-[#7fa67a] bg-[#7fa67a]/10 border-[#7fa67a]/30" },
-  estimativa: { label: "estimativa", color: "text-[#e6c969] bg-[#e6c969]/10 border-[#e6c969]/30" },
-  confira:    { label: "confira antes", color: "text-[#e07a5f] bg-[#e07a5f]/10 border-[#e07a5f]/30" }
-};
-
-let classeAtual = 'economica';
-
-document.getElementById('btn-economica').addEventListener('click', () => setClasse('economica'));
-document.getElementById('btn-executiva').addEventListener('click', () => setClasse('executiva'));
-function setClasse(c){
-  classeAtual = c;
-  const isEco = c === 'economica';
-  document.getElementById('btn-economica').className = `flex-1 py-2 rounded-lg text-sm font-semibold ${isEco ? 'bg-[#c9a227] text-[#0b0e14]' : 'bg-[#0b0e14] border border-white/15 text-white/60'}`;
-  document.getElementById('btn-executiva').className = `flex-1 py-2 rounded-lg text-sm font-semibold ${!isEco ? 'bg-[#c9a227] text-[#0b0e14]' : 'bg-[#0b0e14] border border-white/15 text-white/60'}`;
-  render();
-}
-
-function fmtR$(n){ return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
-function fmtMilhas(n){ return n.toLocaleString('pt-BR') + ' milhas'; }
-
-function render(){
-  const origem = document.getElementById('origem').value.trim() || 'GRU';
-  const destino = document.getElementById('destino').value.trim() || '—';
-  document.getElementById('route-label').textContent = `${origem} → ${destino}`;
-
-  // Raio-X dinâmico
-  const destNorm = destino.toLowerCase();
-  const raioX = document.getElementById('raio-x');
-  if(destNorm.includes('houston') || destNorm.includes('iah')){
-    raioX.classList.remove('hidden');
-    document.getElementById('raio-x-titulo').textContent = 'Segredos de Houston (IAH)';
-    document.getElementById('raio-x-lista').innerHTML = `
-      <li>Houston é um <strong>hub gigante da United Airlines</strong> — grande parte da malha da Star Alliance pra lá passa por ali.</li>
-      <li>Busque vagas Award diretamente no site da <strong>United</strong> e replique a mesma data/voo na <strong>TAP Miles&Go</strong> ou no <strong>Aeroplan</strong> (Star Alliance) pra emitir mais barato.</li>
-      <li>A <strong>Delta</strong> também chega lá, normalmente conectando pelo hub de <strong>Atlanta</strong> — vale conferir como parceira da tabela fixa LATAM Pass.</li>`;
-  } else {
-    raioX.classList.add('hidden');
-  }
-
-  const precoDinheiro = Number(document.getElementById('preco-dinheiro').value) || 0;
-  const cpp = {
-    latam: Number(document.getElementById('cpp-latam').value) || 0,
-    smiles: Number(document.getElementById('cpp-smiles').value) || 0,
-    azul: Number(document.getElementById('cpp-azul').value) || 0,
-    tap: Number(document.getElementById('cpp-tap').value) || 0
-  };
-
-  const cardsEl = document.getElementById('cards');
-  const badgeRegiao = document.getElementById('badge-regiao');
-  const insightBox = document.getElementById('insight-regiao');
-  const regiaoKey = detectarRegiao(destino);
-
-  if(!regiaoKey){
-    badgeRegiao.textContent = 'região não reconhecida';
-    insightBox.classList.add('hidden');
-    cardsEl.innerHTML = `<div class="sm:col-span-2 bg-[#13171f] border border-white/10 rounded-2xl p-5 text-sm text-white/50">
-      Ainda não reconheço a região desse destino — hoje só tenho dados de tabela fixa pra <strong>América do Norte</strong>.
-      Adicionar mais regiões é rápido, só preciso de fontes confirmadas pros valores.</div>`;
-    return;
-  }
-
-  const regiaoDados = TABELA_POR_REGIAO[regiaoKey];
-  badgeRegiao.textContent = regiaoDados.label;
-  if(regiaoDados.insight){
-    insightBox.classList.remove('hidden');
-    insightBox.innerHTML = regiaoDados.insight;
-  } else {
-    insightBox.classList.add('hidden');
-  }
-
-  const dados = regiaoDados[classeAtual];
-  const origemIATA = extrairIATA(origem);
-  const destinoIATA = extrairIATA(destino);
-  const dataLink = document.getElementById('data-aprox').value || '';
-  const dataFormatada = dataLink ? dataLink.split('-').join('-') : '';
-  const dataDisplay = dataLink ? new Date(dataLink+'T12:00:00').toLocaleDateString('pt-BR') : 'data não selecionada';
-
-  const NOMES = {latam:'LATAM Pass', smiles:'Smiles', tap:'TAP Miles&Go', azul:'Azul Fidelidade'};
-  const EMOJIS = {latam:'🎯', smiles:'🎯', tap:'🎯', azul:'✈️'};
-
-  // URLs confirmadas das páginas de busca
-  // Nenhum aceita parâmetros via URL — são React apps que ignoram querystring
-  const URLS_BUSCA = {
-    dinheiro: `https://www.google.com/travel/flights#flt=${origemIATA}.${destinoIATA}.${dataFormatada};c:BRL;e:1`,
-    latam: 'https://www.latamairlines.com/br/pt/use-suas-milhas',
-    smiles: 'https://www.smiles.com.br/passagens',
-    tap: 'https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas',
-    azul: 'https://azulpelomundo.voeazul.com.br/'
-  };
-
-  const LINKS_EMISSAO = URLS_BUSCA;
-  const INSTRUCOES = {
-    latam: `Cole no site: <strong>origem ${origemIATA} → destino ${destinoIATA}</strong> · data: ${dataDisplay} · cabine: ${classeAtual === 'economica' ? 'Econômica' : 'Executiva'} · filtrar por companhia parceira Delta/Iberia/Qatar`,
-    smiles: `Cole no site: <strong>${origemIATA} → ${destinoIATA}</strong> · data: ${dataDisplay} · selecionar "Milhas" como forma de pagamento`,
-    tap: `Cole no site: <strong>${origemIATA} → ${destinoIATA}</strong> · data: ${dataDisplay} · procurar em "Voos com milhas" (seção TAP Miles&Go)`,
-    azul: `Cole no site: <strong>${origemIATA} → ${destinoIATA}</strong> · data: ${dataDisplay} · escolher companhia parceira (United/Turkish/TAP/Emirates) · comparar tarifa Award vs Comercial`
-  };
-
-  const LABEL_BTN = {
-    dinheiro: 'Buscar no Google Flights ↗',
-    latam: 'Abrir LATAM Pass ↗',
-    smiles: 'Abrir Smiles ↗',
-    tap: 'Abrir TAP Miles&Go ↗',
-    azul: 'Abrir Azul pelo Mundo ↗'
-  };
-
-  const opcoes = [
-    { id:'dinheiro', nome:'💰 Dinheiro', sub:'Preço de mercado', custo: precoDinheiro }
-  ];
-  ['latam','smiles','tap','azul'].forEach(prog=>{
-    const d = dados[prog];
-    const milhas = d.milhas;
-    const custo = milhas ? (milhas/1000) * cpp[prog] : 0;
-    const conf = CONF_STYLE[d.confianca];
-    opcoes.push({
-      id: prog, nome: `${EMOJIS[prog]} ${NOMES[prog]}`,
-      sub: `${d.parceira} · ${d.alianca}`,
-      custo: milhas ? custo : 0,
-      milhas, conf, nota: d.nota, semTabela: !milhas
-    });
-  });
-
-  const valoresReais = opcoes.filter(o => o.custo > 0);
-  const menor = valoresReais.length > 0 ? Math.min(...valoresReais.map(o => o.custo)) : 0;
-
-  const origemIATAc = extrairIATA(document.getElementById('origem').value);
-  const destinoIATAc = extrairIATA(destino);
-
-  cardsEl.innerHTML = '';
-  opcoes.forEach(o=>{
-    const isWin = o.custo > 0 && o.custo === menor;
-    const card = document.createElement('div');
-    card.className = `rounded-2xl p-4 border ${isWin ? 'bg-[#16221a] border-[#7fa67a]/50 card-win' : 'bg-[#13171f] border-white/10'}`;
-    let confBadge = '';
-    if(o.conf){
-      confBadge = `<span class="font-mono text-[9.5px] uppercase tracking-wide border rounded-full px-2 py-0.5 ${o.conf.color}">${o.conf.label}</span>`;
-    }
-    const linkEmissao = LINKS_EMISSAO[o.id];
-    const labelBtn = LABEL_BTN[o.id];
-
-    let valorDisplay = '';
-    if(o.semTabela){
-      valorDisplay = `<div class="font-mono text-xs text-white/40 mb-1">dinâmico — sem tabela fixa</div>`;
-    } else if(o.custo > 0){
-      valorDisplay = `<div class="font-display text-2xl font-semibold ${isWin?'text-[#7fa67a]':''} mb-1">${fmtR$(o.custo)}</div>`;
-    } else {
-      valorDisplay = `<div class="font-display text-2xl font-semibold mb-1">—</div>`;
-    }
-
-    card.innerHTML = `
-      <div class="flex justify-between items-start mb-1">
-        <div class="font-display font-semibold text-sm">${o.nome}</div>
-        ${isWin ? '<span class="font-mono text-[9.5px] uppercase tracking-wide text-[#7fa67a] bg-[#7fa67a]/15 border border-[#7fa67a]/40 rounded-full px-2 py-0.5">mais barato</span>' : ''}
-      </div>
-      <div class="text-[11px] text-white/45 mb-2">${o.sub}</div>
-      ${valorDisplay}
-      ${o.milhas ? `<div class="font-mono text-[11px] text-white/50 mb-2">${fmtMilhas(o.milhas)}</div>` : '<div class="mb-1"></div>'}
-      ${confBadge ? `<div class="mb-2">${confBadge}</div>` : ''}
-      ${o.nota ? `<div class="text-[10.5px] text-white/40 leading-snug mb-2">${o.nota}</div>` : ''}
-      ${linkEmissao ? `<a href="${linkEmissao}" target="_blank" rel="noopener" class="block text-center text-xs font-semibold py-2 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969] transition-colors">${labelBtn}</a>` : ''}
-    `;
-    cardsEl.appendChild(card);
-  });
-
-  // Painel de lançamento rápido — copia dados da rota pro clipboard antes de abrir cada site
-  let lancadorEl = document.getElementById('lancador-rapido');
-  if(!lancadorEl){
-    lancadorEl = document.createElement('div');
-    lancadorEl.id = 'lancador-rapido';
-    lancadorEl.className = 'mt-4 bg-[#13171f] border border-white/10 rounded-2xl p-4';
-    cardsEl.parentNode.insertBefore(lancadorEl, cardsEl.nextSibling);
-  }
-  const textoCopia = `${origemIATA} → ${destinoIATA} · ${dataDisplay} · ${classeAtual === 'economica' ? 'Econômica' : 'Executiva'}`;
-  lancadorEl.innerHTML = `
-    <div class="font-mono text-[10px] uppercase tracking-widest text-[#e6c969] mb-3">⚡ Painel de busca — cole os dados em cada programa</div>
-    <div class="flex items-center gap-2 mb-4">
-      <div class="font-mono text-xs text-white/70 bg-[#0b0e14] rounded-lg px-3 py-2 flex-1 select-all">${textoCopia}</div>
-      <button onclick="navigator.clipboard.writeText('${textoCopia.replace(/'/g,"\\'")}').then(()=>{this.textContent='✓ copiado';this.className=this.className.replace('border-white/15','border-[#7fa67a]/50');setTimeout(()=>{this.textContent='📋 Copiar';this.className=this.className.replace('border-[#7fa67a]/50','border-white/15')},1500)})"
-        class="text-xs font-semibold py-2 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 whitespace-nowrap">📋 Copiar</button>
-    </div>
-    <div class="space-y-2">
-      ${['latam','smiles','tap','azul'].map(prog => `
-        <div class="flex items-start gap-3 p-3 rounded-xl bg-[#0b0e14] border border-white/8">
-          <a href="${URLS_BUSCA[prog]}" target="_blank" rel="noopener"
-            class="text-xs font-semibold py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969] whitespace-nowrap">${LABEL_BTN[prog]}</a>
-          <span class="text-[11px] text-white/40 leading-relaxed pt-0.5">${INSTRUCOES[prog]}</span>
-        </div>
-      `).join('')}
-      <div class="flex items-start gap-3 p-3 rounded-xl bg-[#0b0e14] border border-white/8">
-        <a href="${URLS_BUSCA.dinheiro}" target="_blank" rel="noopener"
-          class="text-xs font-semibold py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969] whitespace-nowrap">${LABEL_BTN.dinheiro}</a>
-        <span class="text-[11px] text-white/40 leading-relaxed pt-0.5">Busca com datas flexíveis. Pra monitorar preço, clique em "Acompanhar preços" no resultado.</span>
-      </div>
-    </div>
-  `;
-}
-
-['origem','destino','preco-dinheiro','cpp-latam','cpp-smiles','cpp-azul','cpp-tap','data-aprox'].forEach(id=>{
-  document.getElementById(id).addEventListener('input', render);
-});
-montarAutocomplete('origem','sug-origem');
-montarAutocomplete('destino','sug-destino');
-(function setDataPadrao(){
-  const d = new Date(); d.setDate(d.getDate()+30);
-  document.getElementById('data-aprox').value = d.toISOString().split('T')[0];
+(function(){
+  const d=new Date();d.setDate(d.getDate()+60);
+  document.getElementById('data').value=d.toISOString().split('T')[0];
 })();
-
-/* ---------- Busca real via backend proxy (Kiwi Tequila) ---------- */
-function extrairIATA(texto){
-  // Pega o primeiro código de 3 letras maiúsculas (ex: "IAH - Houston" -> IAH; "GRU" -> GRU)
-  const m = texto.trim().toUpperCase().match(/[A-Z]{3}/);
-  return m ? m[0] : texto.trim().toUpperCase();
-}
-function dataDDMMAAAA(d){
-  const dia = String(d.getDate()).padStart(2,'0');
-  const mes = String(d.getMonth()+1).padStart(2,'0');
-  return `${dia}/${mes}/${d.getFullYear()}`;
-}
-
-async function carregarEndpointSalvo(){
-  try{
-    const r = await window.storage.get('milhacerta-dashboard:endpoint');
-    if(r && r.value) document.getElementById('endpoint-url').value = r.value;
-  }catch(e){ /* ainda não salvo */ }
-}
-document.getElementById('btn-salvar-endpoint').addEventListener('click', async ()=>{
-  const url = document.getElementById('endpoint-url').value.trim();
-  try{
-    await window.storage.set('milhacerta-dashboard:endpoint', url);
-    const msg = document.getElementById('endpoint-salvo-msg');
-    msg.style.opacity = 1; setTimeout(()=>msg.style.opacity = 0, 1800);
-  }catch(e){ console.error('Falha ao salvar endpoint', e); }
-});
-
-document.getElementById('btn-buscar-real').addEventListener('click', buscarPassagemReal);
-
-async function buscarPassagemReal(){
-  const status = document.getElementById('status-busca-real');
-  const urlBase = document.getElementById('endpoint-url').value.trim();
-  if(!urlBase){
-    status.textContent = 'Cola e salva a URL do seu backend em "Configurar backend" primeiro.';
-    return;
-  }
-
-  const origemIATA = extrairIATA(document.getElementById('origem').value);
-  const destinoIATA = extrairIATA(document.getElementById('destino').value);
-
-  const hoje = new Date();
-  const em60dias = new Date(); em60dias.setDate(hoje.getDate() + 60);
-  const dataInicio = dataDDMMAAAA(hoje);
-  const dataFim = dataDDMMAAAA(em60dias);
-
-  const params = new URLSearchParams({ fly_from: origemIATA, fly_to: destinoIATA, date_from: dataInicio, date_to: dataFim });
-
-  status.textContent = `Buscando ${origemIATA} → ${destinoIATA} nos próximos 60 dias...`;
-  document.getElementById('btn-buscar-real').disabled = true;
-
-  try{
-    const response = await fetch(`${urlBase}?${params.toString()}`);
-    if(!response.ok){
-      const erro = await response.json().catch(()=>({}));
-      throw new Error(erro.error || `Erro ${response.status} no backend`);
-    }
-    const voos = await response.json();
-    if(!Array.isArray(voos) || voos.length === 0){
-      // A Duffel devolve {status:"vazio", motivo:"..."} em vez de lista vazia — mostra o motivo real, não um genérico.
-      status.textContent = (voos && voos.motivo) ? voos.motivo : 'Nenhum voo encontrado nessa janela de 60 dias.';
-      return;
-    }
-    // Não confia na ordem devolvida — calcula o mínimo de verdade.
-    const melhor = voos.reduce((min, v) => (v.preco < min.preco ? v : min), voos[0]);
-
-    const inputPreco = document.getElementById('preco-dinheiro');
-    inputPreco.value = Math.round(melhor.preco);
-    render(); // recalcula a comparação com o preço real
-
-    const avisoConversao = melhor.conversao_aplicada
-      ? ` (convertido de ${melhor.moeda_original} ${melhor.preco_original} pela cotação do dia)` : '';
-    status.innerHTML = `⚠️ Ainda em modo de teste — preço fictício, não é tarifa real. Achado: <strong>${melhor.cia}</strong> em ${melhor.data}${avisoConversao}. ${melhor.link ? `<a href="${melhor.link}" target="_blank" rel="noopener" class="text-[#e6c969] underline">ver voo ↗</a>` : ''}`;
-  }catch(error){
-    status.textContent = `Erro na busca real: ${error.message}`;
-  }finally{
-    document.getElementById('btn-buscar-real').disabled = false;
-  }
-}
-
-carregarEndpointSalvo();
-render();
-
 </script>
 </body>
 </html>
