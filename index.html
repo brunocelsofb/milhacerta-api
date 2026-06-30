@@ -327,26 +327,34 @@ function render(){
   const destinoIATA = extrairIATA(destino);
   const dataLink = document.getElementById('data-aprox').value || '';
   const dataFormatada = dataLink ? dataLink.split('-').join('-') : '';
-
-  function linkAzulPeloMundo(){ return 'https://azulpelomundo.voeazul.com.br/'; }
-  function linkSmilesBusca(o,d){ const d2 = dataLink ? dataLink.split('-').reverse().join('/') : ''; return `https://www.smiles.com.br/voos?originAirport=${o}&destinationAirport=${d}&departureDate=${d2}&adults=1&tripType=1`; }
-  function linkLATAMPass(o,d){ return `https://www.latamairlines.com/br/pt/flight-search?origin=${o}&destination=${d}&outbound=${dataFormatada}T12:00:00.000Z&adt=1&cabin=Economy&trip=OW`; }
-  function linkTAP(){ return 'https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas'; }
+  const dataDisplay = dataLink ? new Date(dataLink+'T12:00:00').toLocaleDateString('pt-BR') : 'data não selecionada';
 
   const NOMES = {latam:'LATAM Pass', smiles:'Smiles', tap:'TAP Miles&Go', azul:'Azul Fidelidade'};
-  const EMOJIS = {latam:'🎯', smiles:'🎯', tap:'🎯', azul:'🎯'};
-  const LINKS_EMISSAO = {
-    dinheiro: flightsLink(origem, destino),
-    latam: linkLATAMPass(origemIATA, destinoIATA),
-    smiles: linkSmilesBusca(origemIATA, destinoIATA),
-    tap: linkTAP(),
-    azul: linkAzulPeloMundo()
+  const EMOJIS = {latam:'🎯', smiles:'🎯', tap:'🎯', azul:'✈️'};
+
+  // URLs confirmadas das páginas de busca
+  // Nenhum aceita parâmetros via URL — são React apps que ignoram querystring
+  const URLS_BUSCA = {
+    dinheiro: `https://www.google.com/travel/flights#flt=${origemIATA}.${destinoIATA}.${dataFormatada};c:BRL;e:1`,
+    latam: 'https://www.latamairlines.com/br/pt/use-suas-milhas',
+    smiles: 'https://www.smiles.com.br/passagens',
+    tap: 'https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas',
+    azul: 'https://azulpelomundo.voeazul.com.br/'
   };
+
+  const LINKS_EMISSAO = URLS_BUSCA;
+  const INSTRUCOES = {
+    latam: `Cole no site: <strong>origem ${origemIATA} → destino ${destinoIATA}</strong> · data: ${dataDisplay} · cabine: ${classeAtual === 'economica' ? 'Econômica' : 'Executiva'} · filtrar por companhia parceira Delta/Iberia/Qatar`,
+    smiles: `Cole no site: <strong>${origemIATA} → ${destinoIATA}</strong> · data: ${dataDisplay} · selecionar "Milhas" como forma de pagamento`,
+    tap: `Cole no site: <strong>${origemIATA} → ${destinoIATA}</strong> · data: ${dataDisplay} · procurar em "Voos com milhas" (seção TAP Miles&Go)`,
+    azul: `Cole no site: <strong>${origemIATA} → ${destinoIATA}</strong> · data: ${dataDisplay} · escolher companhia parceira (United/Turkish/TAP/Emirates) · comparar tarifa Award vs Comercial`
+  };
+
   const LABEL_BTN = {
-    dinheiro: 'Buscar voo ↗',
-    latam: 'Buscar no LATAM Pass ↗',
-    smiles: 'Buscar na Smiles ↗',
-    tap: 'Buscar na TAP Miles&Go ↗',
+    dinheiro: 'Buscar no Google Flights ↗',
+    latam: 'Abrir LATAM Pass ↗',
+    smiles: 'Abrir Smiles ↗',
+    tap: 'Abrir TAP Miles&Go ↗',
     azul: 'Abrir Azul pelo Mundo ↗'
   };
 
@@ -416,22 +424,27 @@ function render(){
     lancadorEl.className = 'mt-4 bg-[#13171f] border border-white/10 rounded-2xl p-4';
     cardsEl.parentNode.insertBefore(lancadorEl, cardsEl.nextSibling);
   }
-  const dataDisplay = dataLink ? new Date(dataLink+'T12:00:00').toLocaleDateString('pt-BR') : 'data não selecionada';
-  const textoCopia = `Rota: ${origemIATAc} → ${destinoIATAc} | Data: ${dataDisplay} | Cabine: ${classeAtual === 'economica' ? 'Econômica' : 'Executiva'}`;
+  const textoCopia = `${origemIATA} → ${destinoIATA} · ${dataDisplay} · ${classeAtual === 'economica' ? 'Econômica' : 'Executiva'}`;
   lancadorEl.innerHTML = `
-    <div class="font-mono text-[10px] uppercase tracking-widest text-[#e6c969] mb-2">⚡ Lançamento rápido — copie os dados e abra cada site</div>
-    <div class="font-mono text-xs text-white/60 bg-[#0b0e14] rounded-lg px-3 py-2 mb-3">${textoCopia}</div>
-    <div class="flex flex-wrap gap-2">
-      <button onclick="navigator.clipboard.writeText('${textoCopia.replace(/'/g,"\\'")}').then(()=>{this.textContent='copiado ✓';setTimeout(()=>this.textContent='📋 Copiar dados da rota',1500)})"
-        class="text-xs py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969]">📋 Copiar dados da rota</button>
-      <a href="${LINKS_EMISSAO.azul}" target="_blank" rel="noopener"
-        class="text-xs py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969]">✈️ Azul pelo Mundo</a>
-      <a href="${LINKS_EMISSAO.smiles}" target="_blank" rel="noopener"
-        class="text-xs py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969]">✈️ Smiles</a>
-      <a href="${LINKS_EMISSAO.latam}" target="_blank" rel="noopener"
-        class="text-xs py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969]">✈️ LATAM Pass</a>
-      <a href="${LINKS_EMISSAO.tap}" target="_blank" rel="noopener"
-        class="text-xs py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969]">✈️ TAP Miles&Go</a>
+    <div class="font-mono text-[10px] uppercase tracking-widest text-[#e6c969] mb-3">⚡ Painel de busca — cole os dados em cada programa</div>
+    <div class="flex items-center gap-2 mb-4">
+      <div class="font-mono text-xs text-white/70 bg-[#0b0e14] rounded-lg px-3 py-2 flex-1 select-all">${textoCopia}</div>
+      <button onclick="navigator.clipboard.writeText('${textoCopia.replace(/'/g,"\\'")}').then(()=>{this.textContent='✓ copiado';this.className=this.className.replace('border-white/15','border-[#7fa67a]/50');setTimeout(()=>{this.textContent='📋 Copiar';this.className=this.className.replace('border-[#7fa67a]/50','border-white/15')},1500)})"
+        class="text-xs font-semibold py-2 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 whitespace-nowrap">📋 Copiar</button>
+    </div>
+    <div class="space-y-2">
+      ${['latam','smiles','tap','azul'].map(prog => `
+        <div class="flex items-start gap-3 p-3 rounded-xl bg-[#0b0e14] border border-white/8">
+          <a href="${URLS_BUSCA[prog]}" target="_blank" rel="noopener"
+            class="text-xs font-semibold py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969] whitespace-nowrap">${LABEL_BTN[prog]}</a>
+          <span class="text-[11px] text-white/40 leading-relaxed pt-0.5">${INSTRUCOES[prog]}</span>
+        </div>
+      `).join('')}
+      <div class="flex items-start gap-3 p-3 rounded-xl bg-[#0b0e14] border border-white/8">
+        <a href="${URLS_BUSCA.dinheiro}" target="_blank" rel="noopener"
+          class="text-xs font-semibold py-1.5 px-3 rounded-lg bg-white/5 border border-white/15 hover:border-[#e6c969]/50 hover:text-[#e6c969] whitespace-nowrap">${LABEL_BTN.dinheiro}</a>
+        <span class="text-[11px] text-white/40 leading-relaxed pt-0.5">Busca com datas flexíveis. Pra monitorar preço, clique em "Acompanhar preços" no resultado.</span>
+      </div>
     </div>
   `;
 }
