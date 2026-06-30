@@ -3,270 +3,612 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MilhaCerta</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<title>MilhaCerta — Viaje mais, gaste menos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@600;700&display=swap" rel="stylesheet">
 <style>
-  body { font-family: 'Inter', sans-serif; background: #0b0e14; color: #f3eee2; }
-  input, select { background: #0b0e14; border: 1px solid rgba(255,255,255,0.15); color: #f3eee2; border-radius: 8px; padding: 10px 12px; width: 100%; font-size: 14px; }
-  input:focus, select:focus { outline: 2px solid #e6c969; outline-offset: 1px; }
-  .launch-btn { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #13171f; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; text-decoration: none; color: #f3eee2; transition: border-color 0.15s; }
-  .launch-btn:hover { border-color: rgba(230,201,105,0.5); }
-  .icon-box { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+:root{
+  --bg:#080b10;
+  --s1:#0e1219;
+  --s2:#141920;
+  --s3:#1c2230;
+  --border:rgba(255,255,255,.07);
+  --border2:rgba(255,255,255,.12);
+  --text:#e8e3d8;
+  --sub:#8a8880;
+  --hint:#4a4a48;
+  --gold:#c8a84b;
+  --gold2:#e6c96a;
+  --gold-dim:rgba(200,168,75,.12);
+  --gold-border:rgba(200,168,75,.25);
+  --green:#5a9e6f;
+  --green-dim:rgba(90,158,111,.12);
+  --red:#c0614a;
+  --blue:#4a7fc0;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--gold2);text-decoration:none}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(8,11,16,.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 28px;height:60px;display:flex;align-items:center;gap:0}
+.brand{display:flex;align-items:center;gap:9px;margin-right:40px;flex-shrink:0}
+.brand-name{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.01em;color:var(--text)}
+.nav-tabs{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;color:var(--sub);background:none;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;transition:color .15s,background .15s}
+.nav-tab:hover{color:var(--text);background:var(--s2)}
+.nav-tab.on{color:var(--text);background:var(--s2)}
+
+/* ── LAYOUT ── */
+.page{display:none;padding:48px 28px 80px;max-width:1100px;margin:0 auto}
+.page.on{display:block}
+.two-col{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.two-col-eq{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ── HERO HEADER ── */
+.hero{margin-bottom:40px}
+.hero h1{font-family:'Syne',sans-serif;font-size:32px;font-weight:700;letter-spacing:-.02em;color:var(--text);margin-bottom:8px;line-height:1.15}
+.hero p{font-size:15px;color:var(--sub);max-width:520px}
+
+/* ── CARDS ── */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:24px}
+.card-sm{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:18px}
+.card-highlight{background:var(--s1);border:1px solid var(--gold-border);border-radius:16px;padding:24px}
+
+/* ── FORM ── */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:500;color:var(--hint);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px}
+.field input,.field select{width:100%;background:var(--s2);border:1px solid var(--border2);color:var(--text);border-radius:var(--r);padding:11px 14px;font-size:14px;font-family:inherit;transition:border-color .15s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
+.field input::placeholder{color:var(--hint)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ── BUTTON ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:var(--r);padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.btn-gold{background:var(--gold);color:#0a0c0f}
+.btn-gold:hover{background:var(--gold2)}
+.btn-outline{background:transparent;color:var(--sub);border:1px solid var(--border2)}
+.btn-outline:hover{color:var(--text);border-color:var(--border2)}
+.btn-full{width:100%;margin-top:4px}
+
+/* ── CHIPS ── */
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:3px 9px;border-radius:6px;letter-spacing:.02em}
+.cg{background:var(--green-dim);color:var(--green);border:1px solid rgba(90,158,111,.2)}
+.cq{background:var(--gold-dim);color:var(--gold2);border:1px solid var(--gold-border)}
+.cb{background:rgba(74,127,192,.12);color:var(--blue);border:1px solid rgba(74,127,192,.22)}
+.cr{background:rgba(192,97,74,.12);color:var(--red);border:1px solid rgba(192,97,74,.22)}
+
+/* ── SECTION LABEL ── */
+.sec-label{font-size:11px;font-weight:500;color:var(--hint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+
+/* ── ALERT ── */
+.alert{border-radius:14px;padding:16px 20px;font-size:13.5px;line-height:1.65}
+.alert-gold{background:rgba(200,168,75,.07);border:1px solid var(--gold-border);color:var(--text)}
+.alert strong{color:var(--gold2)}
+.alert-green{background:var(--green-dim);border:1px solid rgba(90,158,111,.2);color:var(--text)}
+
+/* ── LAUNCH GRID ── */
+.launch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.lbtn{display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--s1);border:1px solid var(--border);border-radius:14px;color:var(--text);cursor:pointer;transition:border-color .15s,background .15s;text-decoration:none}
+.lbtn:hover{background:var(--s2);border-color:var(--border2)}
+.licon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.lname{font-size:13px;font-weight:600;margin-bottom:1px}
+.lsub{font-size:11px;color:var(--sub)}
+
+/* ── STEP ── */
+.step{display:flex;gap:16px;padding:20px;background:var(--s1);border:1px solid var(--border);border-radius:14px;margin-bottom:10px}
+.snum{width:32px;height:32px;border-radius:50%;background:var(--gold-dim);border:1px solid var(--gold-border);color:var(--gold2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;margin-top:1px}
+.stitle{font-size:14px;font-weight:600;margin-bottom:5px}
+.sdesc{font-size:13px;color:var(--sub);line-height:1.65}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;color:var(--hint);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:8px 0;border-bottom:1px solid var(--border)}
+.tbl td{padding:11px 0;border-bottom:1px solid var(--border);color:var(--sub)}
+.tbl td:first-child{color:var(--text);font-weight:500}
+.tbl tr:last-child td{border-bottom:none}
+
+/* ── PARTNER ROWS ── */
+.pair{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.pair:last-child{border-bottom:none;padding-bottom:0}
+.pair-name{font-size:13px;color:var(--sub)}
+
+/* ── CALC ── */
+.calc-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.calc-row:last-child{border-bottom:none}
+.calc-label{font-size:13px;color:var(--sub)}
+.calc-val{font-size:17px;font-weight:600;color:var(--text)}
+.calc-winner{margin-top:16px;background:var(--green-dim);border:1px solid rgba(90,158,111,.2);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--green)}
+.calc-loser{margin-top:12px;text-align:center;font-size:13px;color:var(--hint)}
+
+/* ── PRICE CARD ── */
+.pc{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:22px}
+.pc-prog{font-size:12px;font-weight:500;color:var(--hint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.pc-val{font-size:28px;font-weight:600;color:var(--gold2);line-height:1}
+.pc-unit{font-size:12px;color:var(--sub);margin-top:4px;margin-bottom:12px}
+.pc-tip{font-size:12px;color:var(--sub);line-height:1.6;padding-top:12px;border-top:1px solid var(--border)}
+
+/* ── DIVIDER ── */
+hr{border:none;border-top:1px solid var(--border);margin:36px 0}
+
+/* ── COPY STRIP ── */
+.copy-strip{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px}
+.copy-text{flex:1;font-size:13px;color:var(--sub);font-family:'SF Mono','Fira Code',monospace}
+.copy-btn{font-size:11px;padding:4px 12px;border:1px solid var(--border2);border-radius:6px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;transition:color .1s}
+.copy-btn:hover{color:var(--text)}
+
+/* ── PROGRESS ── */
+.prog-bg{background:var(--s3);border-radius:99px;height:4px;margin-top:8px}
+.prog-fill{height:4px;border-radius:99px;background:var(--gold)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:720px){
+  .two-col,.two-col-eq,.three-col{grid-template-columns:1fr}
+  .hero h1{font-size:24px}
+  .page{padding:32px 18px 60px}
+  .nav-inner{padding:0 18px}
+}
 </style>
 </head>
-<body class="min-h-screen p-5 md:p-8">
-<div class="max-w-5xl mx-auto">
+<body>
 
-  <header class="mb-8 border-b border-white/10 pb-6">
-    <div class="flex items-center gap-2 mb-1">
-      <svg width="20" height="20" viewBox="0 0 30 30"><path d="M15 2 L18 13 L28 16 L18 18 L15 28 L12 18 L2 16 L12 13 Z" fill="#c9a227"/></svg>
-      <span style="font-size:18px;font-weight:600">MilhaCerta</span>
+<nav>
+  <div class="nav-inner">
+    <div class="brand">
+      <svg width="22" height="22" viewBox="0 0 30 30"><path d="M15 2L18 13L28 16L18 18L15 28L12 18L2 16L12 13Z" fill="#c8a84b"/></svg>
+      <span class="brand-name">MilhaCerta</span>
     </div>
-    <p style="color:rgba(243,238,226,0.5);font-size:13px">Pesquise a rota e abra todos os sites de uma vez — dinheiro e milhas comparados na hora.</p>
-  </header>
-
-  <div class="grid md:grid-cols-2 gap-6">
-
-    <!-- BUSCA -->
-    <div style="background:#13171f;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px">
-      <h2 style="font-size:15px;font-weight:600;margin-bottom:16px">Sua busca</h2>
-
-      <div class="grid grid-cols-2 gap-3 mb-3">
-        <div>
-          <label style="font-size:11px;color:rgba(243,238,226,0.5);display:block;margin-bottom:5px">ORIGEM</label>
-          <input id="orig" value="GYN" style="text-transform:uppercase">
-        </div>
-        <div>
-          <label style="font-size:11px;color:rgba(243,238,226,0.5);display:block;margin-bottom:5px">DESTINO</label>
-          <input id="dest" value="IAH" style="text-transform:uppercase">
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-3 mb-3">
-        <div>
-          <label style="font-size:11px;color:rgba(243,238,226,0.5);display:block;margin-bottom:5px">DATA DE IDA</label>
-          <input id="data" type="date">
-        </div>
-        <div>
-          <label style="font-size:11px;color:rgba(243,238,226,0.5);display:block;margin-bottom:5px">CABINE</label>
-          <select id="cabine">
-            <option value="economy">Econômica</option>
-            <option value="business">Executiva</option>
-            <option value="first">Primeira classe</option>
-          </select>
-        </div>
-      </div>
-
-      <button onclick="buscar()" style="width:100%;background:#c9a227;color:#0b0e14;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:16px">
-        Buscar →
-      </button>
-
-      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:14px">
-        <h3 style="font-size:11px;color:rgba(243,238,226,0.5);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em">Seu custo do milheiro (R$/1.000)</h3>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label style="font-size:10px;color:rgba(243,238,226,0.4);display:block;margin-bottom:4px">LATAM Pass</label>
-            <input id="cpp-latam" type="number" value="25" oninput="calcular()">
-          </div>
-          <div>
-            <label style="font-size:10px;color:rgba(243,238,226,0.4);display:block;margin-bottom:4px">Smiles</label>
-            <input id="cpp-smiles" type="number" value="17" oninput="calcular()">
-          </div>
-          <div>
-            <label style="font-size:10px;color:rgba(243,238,226,0.4);display:block;margin-bottom:4px">Azul Fidelidade</label>
-            <input id="cpp-azul" type="number" value="15" oninput="calcular()">
-          </div>
-          <div>
-            <label style="font-size:10px;color:rgba(243,238,226,0.4);display:block;margin-bottom:4px">TAP Miles&Go</label>
-            <input id="cpp-tap" type="number" value="35" oninput="calcular()">
-          </div>
-        </div>
-      </div>
+    <div class="nav-tabs">
+      <button class="nav-tab on" onclick="go('buscar',this)">Buscar voos</button>
+      <button class="nav-tab" onclick="go('calc',this)">Calculadora</button>
+      <button class="nav-tab" onclick="go('guia',this)">Como emitir</button>
+      <button class="nav-tab" onclick="go('alianças',this)">Alianças</button>
+      <button class="nav-tab" onclick="go('comprar',this)">Comprar milhas</button>
     </div>
+  </div>
+</nav>
 
-    <!-- RESULTADOS -->
+<!-- ═══════════ BUSCAR ═══════════ -->
+<div class="page on" id="buscar">
+  <div class="hero">
+    <h1>Encontre o voo mais barato</h1>
+    <p>Compare dinheiro e milhas nos principais programas — tudo ao mesmo tempo.</p>
+  </div>
+
+  <div class="two-col">
     <div>
-
-      <!-- Calculadora -->
-      <div style="background:#13171f;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px;margin-bottom:14px">
-        <h2 style="font-size:15px;font-weight:600;margin-bottom:4px">Calculadora</h2>
-        <p style="font-size:12px;color:rgba(243,238,226,0.4);margin-bottom:14px">Digite o preço em dinheiro e as milhas necessárias para ver quem ganha.</p>
-        <div class="grid grid-cols-2 gap-3 mb-4">
-          <div>
-            <label style="font-size:10px;color:rgba(243,238,226,0.5);display:block;margin-bottom:4px">PREÇO EM DINHEIRO (R$)</label>
-            <input id="preco-din" type="number" placeholder="Ex: 4200" oninput="calcular()">
-          </div>
-          <div>
-            <label style="font-size:10px;color:rgba(243,238,226,0.5);display:block;margin-bottom:4px">MILHAS NECESSÁRIAS</label>
-            <input id="milhas-qtd" type="number" placeholder="Ex: 57000" oninput="calcular()">
+      <div class="card">
+        <div class="grid-2">
+          <div class="field"><label>Origem</label><input id="orig" value="GYN" style="text-transform:uppercase"></div>
+          <div class="field"><label>Destino</label><input id="dest" value="IAH" style="text-transform:uppercase"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Data de ida</label><input id="data" type="date"></div>
+          <div class="field"><label>Cabine</label>
+            <select id="cabine">
+              <option value="economy">Econômica</option>
+              <option value="business">Executiva</option>
+              <option value="first">Primeira classe</option>
+            </select>
           </div>
         </div>
-        <div id="calc-result" style="background:#0b0e14;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px;font-size:13px;color:rgba(243,238,226,0.5)">
-          Preencha os campos para ver a comparação.
+        <button class="btn btn-gold btn-full" onclick="buscar()">Buscar em todos os sites →</button>
+      </div>
+
+      <div id="rota-box" style="display:none;margin-top:14px">
+        <div class="copy-strip">
+          <span class="copy-text" id="rota-txt"></span>
+          <button class="copy-btn" id="copy-btn" onclick="copiar()">Copiar</button>
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn btn-outline btn-full" onclick="abrirTodos()">Abrir todos de uma vez ↗</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div id="launch-box" style="display:none">
+        <div class="sec-label">Abrir direto na busca</div>
+        <div class="launch-grid">
+          <a id="lk-gf" href="#" target="_blank" class="lbtn">
+            <div class="licon" style="background:rgba(74,127,192,.15)">✈</div>
+            <div><div class="lname">Google Flights</div><div class="lsub">Menor preço em dinheiro</div></div>
+          </a>
+          <a id="lk-seats" href="#" target="_blank" class="lbtn">
+            <div class="licon" style="background:rgba(90,158,111,.15)">🎯</div>
+            <div><div class="lname">Seats.aero</div><div class="lsub">Disponibilidade de milhas</div></div>
+          </a>
+          <a href="https://www.smiles.com.br/passagens" target="_blank" class="lbtn">
+            <div class="licon" style="background:rgba(200,168,75,.12)">🟠</div>
+            <div><div class="lname">Smiles</div><div class="lsub">GOL + parceiras</div></div>
+          </a>
+          <a href="https://www.latamairlines.com/br/pt/use-suas-milhas" target="_blank" class="lbtn">
+            <div class="licon" style="background:rgba(192,97,74,.12)">🔴</div>
+            <div><div class="lname">LATAM Pass</div><div class="lsub">Delta, Qatar, Iberia</div></div>
+          </a>
+          <a href="https://azulpelomundo.voeazul.com.br" target="_blank" class="lbtn">
+            <div class="licon" style="background:rgba(74,127,192,.12)">🔵</div>
+            <div><div class="lname">Azul pelo Mundo</div><div class="lsub">United, TAP, Turkish</div></div>
+          </a>
+          <a href="https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas" target="_blank" class="lbtn">
+            <div class="licon" style="background:rgba(90,158,111,.12)">🟢</div>
+            <div><div class="lname">TAP Miles&amp;Go</div><div class="lsub">Star Alliance — tabela fixa</div></div>
+          </a>
         </div>
       </div>
 
-      <!-- Rota copiável -->
-      <div id="rota-box" style="display:none;background:#13171f;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px;margin-bottom:14px">
-        <h2 style="font-size:15px;font-weight:600;margin-bottom:10px">Dados da rota</h2>
-        <div style="display:flex;align-items:center;gap:8px;background:#0b0e14;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;margin-bottom:12px">
-          <span id="rota-texto" style="flex:1;font-size:12px;color:rgba(243,238,226,0.7);font-family:monospace"></span>
-          <button id="copy-btn" onclick="copiar()" style="font-size:11px;padding:4px 10px;border:1px solid rgba(255,255,255,0.2);border-radius:6px;background:transparent;color:rgba(243,238,226,0.6);cursor:pointer;white-space:nowrap">Copiar</button>
-        </div>
-        <button onclick="abrirTodos()" style="width:100%;padding:10px;border:1px solid rgba(255,255,255,0.2);border-radius:10px;background:transparent;color:#f3eee2;cursor:pointer;font-size:13px">
-          ↗ Abrir todos os sites de uma vez
-        </button>
+      <div id="launch-placeholder" style="display:flex;align-items:center;justify-content:center;height:200px;background:var(--s1);border:1px dashed var(--border);border-radius:16px">
+        <p style="color:var(--hint);font-size:14px;text-align:center;padding:20px">Preencha a rota ao lado<br>e clique em Buscar</p>
       </div>
+    </div>
+  </div>
+</div>
 
+<!-- ═══════════ CALCULADORA ═══════════ -->
+<div class="page" id="calc">
+  <div class="hero">
+    <h1>Milhas ou dinheiro?</h1>
+    <p>Descubra qual opção sai mais barata para o seu voo específico.</p>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="sec-label">Dados do voo</div>
+        <div class="field"><label>Preço em dinheiro (R$)</label><input id="c-din" type="number" placeholder="Ex: 4.200" oninput="calcular()"></div>
+        <div class="field"><label>Milhas necessárias</label><input id="c-mi" type="number" placeholder="Ex: 57.000" oninput="calcular()"></div>
+      </div>
+      <div class="card">
+        <div class="sec-label">Seu custo por 1.000 milhas (R$)</div>
+        <div class="grid-2">
+          <div class="field"><label>LATAM Pass</label><input id="cpp-l" type="number" value="25" oninput="calcular()"></div>
+          <div class="field"><label>Smiles</label><input id="cpp-s" type="number" value="17" oninput="calcular()"></div>
+          <div class="field"><label>Azul</label><input id="cpp-a" type="number" value="15" oninput="calcular()"></div>
+          <div class="field"><label>TAP</label><input id="cpp-t" type="number" value="35" oninput="calcular()"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-label">Resultado</div>
+      <div id="c-result">
+        <p style="color:var(--hint);font-size:14px;padding:40px 0;text-align:center">Preencha os campos<br>para ver a comparação</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ GUIA ═══════════ -->
+<div class="page" id="guia">
+  <div class="hero">
+    <h1>Como emitir com parceiras</h1>
+    <p>O processo real de usar milhas LATAM Pass para voar na Delta, Qatar, Iberia e mais.</p>
+  </div>
+
+  <div class="alert alert-gold" style="margin-bottom:32px">
+    <strong>O que a maioria não sabe:</strong> suas milhas LATAM Pass não servem só para voos da própria LATAM. Você pode voar na Delta para os EUA, Qatar para o Oriente Médio, Iberia para a Europa — pagando a tabela fixa da LATAM. O custo em milhas é fixo, independente do preço do voo no mercado.
+  </div>
+
+  <div style="margin-bottom:32px">
+    <div class="step">
+      <div class="snum">1</div>
+      <div>
+        <div class="stitle">Encontre disponibilidade no Seats.aero</div>
+        <div class="sdesc">Acesse o Seats.aero e busque sua rota (ex: GYN→IAH). Filtre pelo programa LATAM Pass. O site mostra quais datas têm assentos award disponíveis. <strong style="color:var(--text)">Anote: data exata, número do voo, companhia e cabine.</strong></div>
+        <div style="margin-top:12px"><a href="https://seats.aero/search" target="_blank" class="btn btn-outline" style="font-size:12px;padding:7px 16px">Abrir Seats.aero →</a></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="snum">2</div>
+      <div>
+        <div class="stitle">Confirme no site da companhia parceira</div>
+        <div class="sdesc">Entre no site da Delta (delta.com), Qatar (qatarairways.com) ou Iberia e confirme que aquele voo específico existe naquela data com disponibilidade award. Disponibilidade no Seats.aero pode ter sumido em horas.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="snum">3</div>
+      <div>
+        <div class="stitle">Ligue ou mande mensagem para o LATAM Pass</div>
+        <div class="sdesc">A emissão com parceiras em tabela fixa <strong style="color:var(--text)">não é feita pelo site da LATAM</strong> — apenas por central. Diga: <em style="color:var(--text)">"Quero emitir em tabela fixa com companhia parceira [nome]"</em>. Tenha em mãos: origem, destino, data, número do voo e cabine.</div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <span class="chip cq">WhatsApp (11) 3003-7700</span>
+          <span class="chip cq">Central 0800 570 5700</span>
+          <span class="chip cr">Não funciona pelo site</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="snum">4</div>
+      <div>
+        <div class="stitle">Pague apenas as taxas aeroportuárias</div>
+        <div class="sdesc">As milhas cobrem o bilhete. Você paga as taxas de embarque em reais (geralmente R$ 300–1.200 dependendo da rota e cabine). Nenhuma taxa extra pela LATAM.</div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <span class="chip cg">Milhas = passagem</span>
+          <span class="chip cq">Você paga só as taxas</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- LINKS -->
-  <div id="links-box" style="display:none;margin-top:20px">
-    <h2 style="font-size:15px;font-weight:600;margin-bottom:14px">Abrir na busca certa</h2>
-    <div class="grid md:grid-cols-2 gap-3">
+  <hr>
 
-      <a id="link-gflights" href="#" target="_blank" class="launch-btn">
-        <div class="icon-box" style="background:#1a2744">🔍</div>
-        <div>
-          <div style="font-size:13px;font-weight:600">Google Flights</div>
-          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Dinheiro — rota pré-preenchida</div>
-        </div>
-      </a>
+  <div class="sec-label">Tabela de milhas por destino — LATAM Pass</div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>Destino</th><th>Companhia parceira</th><th>Econômica</th><th>Executiva</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>EUA / Canadá</td><td>Delta Air Lines</td><td>57.000</td><td>135.000</td><td><span class="chip cg">Confirmado</span></td></tr>
+        <tr><td>Europa</td><td>Iberia</td><td>Consultar</td><td>~135.000</td><td><span class="chip cq">Verificar</span></td></tr>
+        <tr><td>Oriente Médio</td><td>Qatar Airways</td><td>Consultar</td><td>Consultar</td><td><span class="chip cq">Verificar</span></td></tr>
+        <tr><td>Japão</td><td>Japan Airlines</td><td>Consultar</td><td>Consultar</td><td><span class="chip cq">Verificar</span></td></tr>
+        <tr><td>Oceania</td><td>Qantas</td><td>Consultar</td><td>Consultar</td><td><span class="chip cq">Verificar</span></td></tr>
+        <tr><td>América do Sul</td><td>Aerolíneas Arg.</td><td>Dinâmico</td><td>Dinâmico</td><td><span class="chip cr">Sem tabela fixa</span></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px;color:var(--hint);margin-top:14px">Valores conferidos jun/2026. Confirme sempre antes de transferir milhas — programas reajustam tabelas sem aviso.</p>
+  </div>
 
-      <a id="link-seats" href="#" target="_blank" class="launch-btn">
-        <div class="icon-box" style="background:#0d2a1f">✈</div>
-        <div>
-          <div style="font-size:13px;font-weight:600">Seats.aero</div>
-          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Disponibilidade de milhas (Pro)</div>
-        </div>
-      </a>
+  <hr>
 
-      <a href="https://www.smiles.com.br/passagens" target="_blank" class="launch-btn">
-        <div class="icon-box" style="background:#2a1a00">🟠</div>
-        <div>
-          <div style="font-size:13px;font-weight:600">Smiles</div>
-          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Milhas GOL / American / parceiras</div>
-        </div>
-      </a>
+  <div class="sec-label">Como ler os resultados do Seats.aero</div>
+  <div class="three-col">
+    <div class="card-sm">
+      <span class="chip cg" style="margin-bottom:10px">Verde</span>
+      <p style="font-size:13px;color:var(--sub);margin-top:8px">Disponível agora. Age rápido — disponibilidade award some em horas.</p>
+    </div>
+    <div class="card-sm">
+      <span class="chip cq" style="margin-bottom:10px">Last seen X hours ago</span>
+      <p style="font-size:13px;color:var(--sub);margin-top:8px">Foi visto há X horas. Pode ter sumido. Confirme no site da companhia antes de ligar.</p>
+    </div>
+    <div class="card-sm">
+      <span class="chip cb" style="margin-bottom:10px">Valor em milhas</span>
+      <p style="font-size:13px;color:var(--sub);margin-top:8px">O valor mostrado é do programa filtrado. Para LATAM Pass, use a tabela acima, não o de outro programa.</p>
+    </div>
+  </div>
+</div>
 
-      <a href="https://www.latamairlines.com/br/pt/use-suas-milhas" target="_blank" class="launch-btn">
-        <div class="icon-box" style="background:#2a0a12">🔴</div>
-        <div>
-          <div style="font-size:13px;font-weight:600">LATAM Pass</div>
-          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Milhas LATAM / Delta / Qatar — tabela fixa</div>
-        </div>
-      </a>
+<!-- ═══════════ ALIANÇAS ═══════════ -->
+<div class="page" id="alianças">
+  <div class="hero">
+    <h1>Alianças e parcerias</h1>
+    <p>Quem voa com quem — e qual programa usar para cada destino.</p>
+  </div>
 
-      <a href="https://azulpelomundo.voeazul.com.br" target="_blank" class="launch-btn">
-        <div class="icon-box" style="background:#0a1a2a">🔵</div>
-        <div>
-          <div style="font-size:13px;font-weight:600">Azul pelo Mundo</div>
-          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Pontos Azul / United / TAP / Turkish</div>
-        </div>
-      </a>
+  <div class="alert alert-gold" style="margin-bottom:32px">
+    <strong>Como funciona a disponibilidade compartilhada:</strong> quando a Delta libera 5 assentos award, todos os programas parceiros enxergam os mesmos 5 assentos. Quem emitir primeiro ocupa. O que muda entre programas é o <em>preço em milhas</em> — por isso vale comparar no Seats.aero antes de decidir por qual programa emitir.
+  </div>
 
-      <a href="https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas" target="_blank" class="launch-btn">
-        <div class="icon-box" style="background:#0a2a12">🟢</div>
-        <div>
-          <div style="font-size:13px;font-weight:600">TAP Miles&Go</div>
-          <div style="font-size:11px;color:rgba(243,238,226,0.45)">Star Alliance — tabela fixa confirmada</div>
-        </div>
-      </a>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:32px">
 
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(192,97,74,.12);display:flex;align-items:center;justify-content:center;font-size:19px">🔴</div>
+        <div><div style="font-size:15px;font-weight:600">LATAM Pass</div><div style="font-size:11px;color:var(--sub)">Sem aliança — parcerias próprias</div></div>
+      </div>
+      <div class="pair"><span class="pair-name">Delta Air Lines</span><span class="chip cq">SkyTeam</span></div>
+      <div class="pair"><span class="pair-name">Qatar Airways</span><span class="chip cb">oneworld</span></div>
+      <div class="pair"><span class="pair-name">Iberia</span><span class="chip cb">oneworld</span></div>
+      <div class="pair"><span class="pair-name">Japan Airlines</span><span class="chip cb">oneworld</span></div>
+      <div class="pair"><span class="pair-name">Qantas</span><span class="chip cb">oneworld</span></div>
+      <div class="pair"><span class="pair-name">Alaska Airlines</span><span class="chip cb">oneworld</span></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(200,168,75,.1);display:flex;align-items:center;justify-content:center;font-size:19px">🟠</div>
+        <div><div style="font-size:15px;font-weight:600">Smiles</div><div style="font-size:11px;color:var(--sub)">SkyTeam + parceiras</div></div>
+      </div>
+      <div class="pair"><span class="pair-name">Delta Air Lines</span><span class="chip cq">SkyTeam</span></div>
+      <div class="pair"><span class="pair-name">Air France / KLM</span><span class="chip cq">SkyTeam</span></div>
+      <div class="pair"><span class="pair-name">Aerolíneas Arg.</span><span class="chip cq">SkyTeam</span></div>
+      <div class="pair"><span class="pair-name">Air Europa</span><span class="chip cq">SkyTeam</span></div>
+      <div class="pair"><span class="pair-name">Etihad Airways</span><span class="chip cb">Parceira</span></div>
+      <div class="pair"><span class="pair-name">Ethiopian Airlines</span><span class="chip cg">Star Alliance</span></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(74,127,192,.12);display:flex;align-items:center;justify-content:center;font-size:19px">🔵</div>
+        <div><div style="font-size:15px;font-weight:600">Azul Fidelidade</div><div style="font-size:11px;color:var(--sub)">Star Alliance + outras</div></div>
+      </div>
+      <div class="pair"><span class="pair-name">United Airlines</span><span class="chip cg">Star Alliance</span></div>
+      <div class="pair"><span class="pair-name">TAP Portugal</span><span class="chip cg">Star Alliance</span></div>
+      <div class="pair"><span class="pair-name">Copa Airlines</span><span class="chip cg">Star Alliance</span></div>
+      <div class="pair"><span class="pair-name">Turkish Airlines</span><span class="chip cg">Star Alliance</span></div>
+      <div class="pair"><span class="pair-name">Emirates</span><span class="chip cb">Parceira</span></div>
+      <div class="pair"><span class="pair-name">Air Canada</span><span class="chip cg">Star Alliance</span></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(90,158,111,.12);display:flex;align-items:center;justify-content:center;font-size:19px">🟢</div>
+        <div><div style="font-size:15px;font-weight:600">TAP Miles&amp;Go</div><div style="font-size:11px;color:var(--sub)">Star Alliance — tabela fixa</div></div>
+      </div>
+      <div class="pair"><span class="pair-name">United Airlines</span><span class="chip cg">Star Alliance</span></div>
+      <div class="pair"><span class="pair-name">Copa Airlines</span><span class="chip cg">Star Alliance</span></div>
+      <div class="pair"><span class="pair-name">Lufthansa</span><span class="chip cg">Star Alliance</span></div>
+      <div class="pair"><span class="pair-name">Swiss</span><span class="chip cg">Star Alliance</span></div>
+      <div class="pair"><span class="pair-name">Air Canada Aeroplan</span><span class="chip cg">Star Alliance</span></div>
+      <p style="font-size:12px;color:var(--sub);margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">Tabela fixa: 95.000 milhas para executiva Brasil→EUA e Brasil→Europa.</p>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <div class="sec-label">Qual programa usar por destino</div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>Destino</th><th>Melhor programa</th><th>Companhia</th><th>Tipo</th></tr></thead>
+      <tbody>
+        <tr><td>EUA — econômica</td><td>LATAM Pass</td><td>Delta</td><td><span class="chip cg">Tabela fixa</span></td></tr>
+        <tr><td>EUA — executiva</td><td>TAP Miles&amp;Go</td><td>United</td><td><span class="chip cg">Tabela fixa</span></td></tr>
+        <tr><td>Europa — econômica</td><td>Smiles</td><td>Air France/KLM</td><td><span class="chip cq">Dinâmico</span></td></tr>
+        <tr><td>Europa — executiva</td><td>TAP Miles&amp;Go</td><td>TAP / Lufthansa</td><td><span class="chip cg">Tabela fixa</span></td></tr>
+        <tr><td>Oriente Médio</td><td>LATAM Pass</td><td>Qatar Airways</td><td><span class="chip cq">Verificar</span></td></tr>
+        <tr><td>Japão / Ásia</td><td>LATAM Pass</td><td>Japan Airlines</td><td><span class="chip cq">Verificar</span></td></tr>
+        <tr><td>Austrália</td><td>LATAM Pass</td><td>Qantas</td><td><span class="chip cq">Verificar</span></td></tr>
+        <tr><td>América do Sul</td><td>Smiles ou Azul</td><td>GOL / Copa</td><td><span class="chip cq">Dinâmico</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════ COMPRAR MILHAS ═══════════ -->
+<div class="page" id="comprar">
+  <div class="hero">
+    <h1>Comprar milhas — quando e onde</h1>
+    <p>Estratégia real para comprar milhas com o menor custo possível.</p>
+  </div>
+
+  <div class="alert alert-gold" style="margin-bottom:32px">
+    <strong>Regra de ouro:</strong> só compre milhas quando você já tem o voo e a disponibilidade confirmada no Seats.aero. Nunca compre milhas "para guardar" — programas desvalorizam e milhas expiram.
+  </div>
+
+  <div class="sec-label">Preço de referência — jun/2026</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:32px">
+    <div class="pc">
+      <div class="pc-prog">Smiles</div>
+      <div class="pc-val">R$ 16–20</div>
+      <div class="pc-unit">por 1.000 milhas em promoção</div>
+      <div class="pc-tip">Faz promoções frequentes. Sem promo: R$ 24–28. Assine o e-mail deles para receber alertas.</div>
+    </div>
+    <div class="pc">
+      <div class="pc-prog">Azul Fidelidade</div>
+      <div class="pc-val">R$ 18–22</div>
+      <div class="pc-unit">por 1.000 pontos em promoção</div>
+      <div class="pc-tip">Valor de referência atual. Confirme no site antes de comprar.</div>
+    </div>
+    <div class="pc">
+      <div class="pc-prog">LATAM Pass</div>
+      <div class="pc-val">R$ 22–28</div>
+      <div class="pc-unit">por 1.000 milhas em promoção</div>
+      <div class="pc-tip">Em promoção chegam a R$ 22. Sem promo: R$ 28–35.</div>
+    </div>
+    <div class="pc">
+      <div class="pc-prog">TAP Miles&amp;Go</div>
+      <div class="pc-val">R$ 35–50</div>
+      <div class="pc-unit">por 1.000 milhas</div>
+      <div class="pc-tip">Só compensa para executiva em tabela fixa — o produto (especialmente Lufthansa) é excelente nesses casos.</div>
     </div>
   </div>
 
-  <footer style="margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);font-size:11px;color:rgba(243,238,226,0.3);line-height:1.6">
-    Uso pessoal. Valores de milhas mudam com frequência — confirme sempre no site oficial antes de comprar ou transferir milhas.
-  </footer>
+  <hr>
 
+  <div class="sec-label">Alternativa mais barata: transferência de cartão com bônus</div>
+  <div class="card" style="margin-bottom:24px">
+    <p style="font-size:13px;color:var(--sub);margin-bottom:18px;line-height:1.65">Transferir pontos de cartão de crédito para programas de milhas geralmente sai mais barato que compra direta — especialmente com bônus de transferência em promoção.</p>
+    <table class="tbl">
+      <thead><tr><th>Banco / Programa</th><th>Destino das milhas</th><th>Proporção base</th><th>Bônus frequente</th></tr></thead>
+      <tbody>
+        <tr><td>Livelo</td><td>LATAM Pass / Smiles / Azul</td><td>1 ponto = 1 milha</td><td>70–100% em promoção</td></tr>
+        <tr><td>Esfera (Bradesco)</td><td>LATAM Pass / Smiles</td><td>1 ponto = 1 milha</td><td>Até 80% (trimestral)</td></tr>
+        <tr><td>Iupp (Itaú)</td><td>LATAM Pass / Smiles</td><td>~1:1 (varia)</td><td>Variável por período</td></tr>
+        <tr><td>C6 Bank (Átomos)</td><td>LATAM Pass / Smiles</td><td>1 ponto = 1 milha</td><td>50–70% sazonal</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-green" style="margin-top:18px">
+      Com bônus de 100% na Livelo, cada ponto vira 2 milhas — equivale a comprar milhas pela metade do preço de tabela.
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="sec-label">Quando comprar vale a pena?</div>
+  <div class="two-col-eq">
+    <div>
+      <div class="card-sm" style="margin-bottom:10px;border-color:rgba(90,158,111,.2)">
+        <span class="chip cg" style="margin-bottom:10px">Compre</span>
+        <p style="font-size:13px;color:var(--sub);margin-top:8px;line-height:1.6">Você tem a data, o voo e a disponibilidade confirmada no Seats.aero. Só faltam milhas para completar.</p>
+      </div>
+      <div class="card-sm" style="border-color:rgba(90,158,111,.2)">
+        <span class="chip cg" style="margin-bottom:10px">Compre</span>
+        <p style="font-size:13px;color:var(--sub);margin-top:8px;line-height:1.6">Promoção abaixo de R$ 18/1.000 milhas e você já tem destino e disponibilidade garantidos.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card-sm" style="margin-bottom:10px;border-color:rgba(192,97,74,.2)">
+        <span class="chip cr" style="margin-bottom:10px">Não compre</span>
+        <p style="font-size:13px;color:var(--sub);margin-top:8px;line-height:1.6">Sem disponibilidade confirmada. Comprar primeiro e depois procurar voo é o maior erro de quem usa milhas.</p>
+      </div>
+      <div class="card-sm" style="border-color:rgba(192,97,74,.2)">
+        <span class="chip cr" style="margin-bottom:10px">Não compre</span>
+        <p style="font-size:13px;color:var(--sub);margin-top:8px;line-height:1.6">Preço acima de R$ 30/1.000 sem promoção especial. Provavelmente pagar em dinheiro é mais vantajoso.</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-function fmt(n){return'R$ '+Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function go(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(btn)btn.classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
 function buscar(){
-  const orig=(document.getElementById('orig').value||'GYN').toUpperCase().trim();
-  const dest=(document.getElementById('dest').value||'IAH').toUpperCase().trim();
-  const data=document.getElementById('data').value;
-  const cabine=document.getElementById('cabine').value;
-  const cabineLabel={economy:'Econômica',business:'Executiva',first:'Primeira classe'}[cabine];
-  const dataFmt=data?new Date(data+'T12:00:00').toLocaleDateString('pt-BR'):'data não selecionada';
-
-  document.getElementById('rota-texto').textContent=`${orig} → ${dest}  ·  ${dataFmt}  ·  ${cabineLabel}`;
-
-  const gfUrl=data
-    ?`https://www.google.com/travel/flights#flt=${orig}.${dest}.${data};c:BRL;e:1;sd:1;t:f`
-    :`https://www.google.com/travel/flights?q=voos+de+${orig}+para+${dest}&curr=BRL`;
-  document.getElementById('link-gflights').href=gfUrl;
-  document.getElementById('link-seats').href=`https://seats.aero/search?origin_airport=${orig}&destination_airport=${dest}`;
-
+  const o=(document.getElementById('orig').value||'GYN').toUpperCase().trim();
+  const d=(document.getElementById('dest').value||'IAH').toUpperCase().trim();
+  const dt=document.getElementById('data').value;
+  const cab=document.getElementById('cabine').value;
+  const cl={economy:'Econômica',business:'Executiva',first:'Primeira Classe'}[cab];
+  const df=dt?new Date(dt+'T12:00:00').toLocaleDateString('pt-BR'):'sem data';
+  document.getElementById('rota-txt').textContent=`${o} → ${d}  ·  ${df}  ·  ${cl}`;
+  const gf=dt?`https://www.google.com/travel/flights#flt=${o}.${d}.${dt};c:BRL;e:1;sd:1;t:f`:`https://www.google.com/travel/flights?q=voos+${o}+para+${d}&curr=BRL`;
+  document.getElementById('lk-gf').href=gf;
+  document.getElementById('lk-seats').href=`https://seats.aero/search?origin_airport=${o}&destination_airport=${d}`;
   document.getElementById('rota-box').style.display='block';
-  document.getElementById('links-box').style.display='block';
-  document.getElementById('links-box').scrollIntoView({behavior:'smooth',block:'start'});
-  calcular();
+  document.getElementById('launch-box').style.display='block';
+  document.getElementById('launch-placeholder').style.display='none';
 }
 
 function abrirTodos(){
-  [
-    document.getElementById('link-gflights').href,
-    document.getElementById('link-seats').href,
-    'https://www.smiles.com.br/passagens',
-    'https://www.latamairlines.com/br/pt/use-suas-milhas',
-    'https://azulpelomundo.voeazul.com.br',
-    'https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas'
-  ].forEach(u=>window.open(u,'_blank'));
+  const o=(document.getElementById('orig').value||'GYN').toUpperCase().trim();
+  const d=(document.getElementById('dest').value||'IAH').toUpperCase().trim();
+  const dt=document.getElementById('data').value;
+  const gf=dt?`https://www.google.com/travel/flights#flt=${o}.${d}.${dt};c:BRL;e:1;sd:1;t:f`:`https://www.google.com/travel/flights?q=voos+${o}+para+${d}&curr=BRL`;
+  [gf,`https://seats.aero/search?origin_airport=${o}&destination_airport=${d}`,'https://www.smiles.com.br/passagens','https://www.latamairlines.com/br/pt/use-suas-milhas','https://azulpelomundo.voeazul.com.br','https://www.flytap.com/pt-br/tap-miles-and-go/voos-com-milhas'].forEach(u=>window.open(u,'_blank'));
 }
 
 function copiar(){
-  const txt=document.getElementById('rota-texto').textContent;
-  navigator.clipboard.writeText(txt).then(()=>{
-    const b=document.getElementById('copy-btn');
-    b.textContent='Copiado ✓';
-    setTimeout(()=>b.textContent='Copiar',1500);
-  }).catch(()=>{});
+  navigator.clipboard.writeText(document.getElementById('rota-txt').textContent).catch(()=>{});
+  const b=document.getElementById('copy-btn');b.textContent='Copiado';setTimeout(()=>b.textContent='Copiar',1500);
 }
 
+function fmt(n){return'R$ '+Math.round(n).toLocaleString('pt-BR')}
+function fmtM(n){return Number(n).toLocaleString('pt-BR')+' milhas'}
+
 function calcular(){
-  const din=parseFloat(document.getElementById('preco-din').value)||0;
-  const milhas=parseFloat(document.getElementById('milhas-qtd').value)||0;
-  const cpps={latam:parseFloat(document.getElementById('cpp-latam').value)||0,smiles:parseFloat(document.getElementById('cpp-smiles').value)||0,azul:parseFloat(document.getElementById('cpp-azul').value)||0,tap:parseFloat(document.getElementById('cpp-tap').value)||0};
-  const nomes={latam:'LATAM Pass',smiles:'Smiles',azul:'Azul Fidelidade',tap:'TAP Miles&Go'};
-  const el=document.getElementById('calc-result');
-  if(!din&&!milhas){el.innerHTML='<span style="color:rgba(243,238,226,0.4)">Preencha os campos para ver a comparação.</span>';return;}
+  const din=parseFloat(document.getElementById('c-din').value)||0;
+  const mi=parseFloat(document.getElementById('c-mi').value)||0;
+  const cpps={l:{n:'LATAM Pass',v:parseFloat(document.getElementById('cpp-l').value)||0},s:{n:'Smiles',v:parseFloat(document.getElementById('cpp-s').value)||0},a:{n:'Azul Fidelidade',v:parseFloat(document.getElementById('cpp-a').value)||0},t:{n:'TAP Miles&Go',v:parseFloat(document.getElementById('cpp-t').value)||0}};
+  const el=document.getElementById('c-result');
+  if(!din&&!mi){el.innerHTML='<p style="color:var(--hint);font-size:14px;padding:40px 0;text-align:center">Preencha os campos<br>para ver a comparação</p>';return}
   let html='';
-  if(din>0)html+=`<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.08)"><span style="color:rgba(243,238,226,0.5);font-size:11px">DINHEIRO</span><br><strong style="font-size:18px">${fmt(din)}</strong></div>`;
-  if(milhas>0){
-    const custos=Object.keys(cpps).filter(p=>cpps[p]>0).map(p=>({p,v:(milhas/1000)*cpps[p]})).sort((a,b)=>a.v-b.v);
-    if(custos.length>0){
-      html+=`<div style="font-size:11px;color:rgba(243,238,226,0.5);margin-bottom:8px">${Number(milhas).toLocaleString('pt-BR')} MILHAS EM CADA PROGRAMA</div>`;
-      custos.forEach((c,i)=>{
-        const melhor=i===0;
-        const cor=melhor&&din>0&&c.v<din?'#7fa67a':melhor?'#e6c969':'rgba(243,238,226,0.8)';
-        const tag=melhor&&din>0&&c.v<din?' ✓ mais barato':melhor&&din===0?' ✓ melhor opção':'';
-        html+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:12px;color:rgba(243,238,226,0.6)">${nomes[c.p]}</span>
-          <span style="font-size:14px;font-weight:600;color:${cor}">${fmt(c.v)}${tag}</span>
-        </div>`;
-      });
-      if(din>0&&custos[0].v<din){
-        const eco=din-custos[0].v;
-        html+=`<div style="margin-top:10px;padding:10px;background:rgba(127,166,122,0.12);border:1px solid rgba(127,166,122,0.3);border-radius:8px;font-size:12px;color:#7fa67a">Economia usando ${nomes[custos[0].p]}: <strong>${fmt(eco)}</strong></div>`;
-      }else if(din>0){
-        html+=`<div style="margin-top:10px;padding:10px;background:rgba(255,255,255,0.05);border-radius:8px;font-size:12px;color:rgba(243,238,226,0.5)">Com essas milhas, pagar em dinheiro sai mais barato.</div>`;
-      }
+  if(din>0)html+=`<div class="calc-row"><div class="calc-label">Pagar em dinheiro</div><div class="calc-val">${fmt(din)}</div></div>`;
+  if(mi>0){
+    const cs=Object.entries(cpps).filter(([,x])=>x.v>0).map(([,x])=>({n:x.n,v:Math.round((mi/1000)*x.v)})).sort((a,b)=>a.v-b.v);
+    cs.forEach(c=>{html+=`<div class="calc-row"><div><div class="calc-label">${c.n}</div><div style="font-size:11px;color:var(--hint)">${fmtM(mi)}</div></div><div class="calc-val">${fmt(c.v)}</div></div>`});
+    if(din>0&&cs.length>0){
+      const m=cs[0];
+      if(m.v<din)html+=`<div class="calc-winner">Usar <strong>${m.n}</strong> economiza <strong>${fmt(din-m.v)}</strong> em relação ao dinheiro.</div>`;
+      else html+=`<p class="calc-loser">Com esse milheiro, pagar em dinheiro ainda é mais vantajoso.</p>`;
     }
   }
   el.innerHTML=html;
 }
 
-(function(){
-  const d=new Date();d.setDate(d.getDate()+60);
-  document.getElementById('data').value=d.toISOString().split('T')[0];
-})();
+(function(){const d=new Date();d.setDate(d.getDate()+60);document.getElementById('data').value=d.toISOString().split('T')[0];})();
 </script>
 </body>
 </html>
